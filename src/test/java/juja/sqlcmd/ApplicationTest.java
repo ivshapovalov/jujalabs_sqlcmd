@@ -1,4 +1,5 @@
-import juja.sqlcmd.Application;
+package juja.sqlcmd;
+
 import org.junit.Test;
 
 public class ApplicationTest {
