@@ -1,4 +1,4 @@
-package juja;
+package juja.sqlcmd;
 
 import org.junit.Test;
 
