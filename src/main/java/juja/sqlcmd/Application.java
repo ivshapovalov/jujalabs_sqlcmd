@@ -15,26 +15,33 @@ public class Application {
 
     private Connection connection;
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        new Application().simpleSQL();
-    }
-
     public void simpleSQL() throws SQLException, ClassNotFoundException {
         Class.forName(DB_DRIVER);
         connection = DriverManager
                 .getConnection(DB_CONNECTION, DB_USER, DB_PASSWORD);
-        printTableNames();
-        String sqlQuery = "CREATE TABLE users(id SERIAL, name TEXT, password TEXT)";
+        dropTableIfExist("users");
+        String sqlQuery;
+        sqlQuery = "CREATE TABLE users(id SERIAL, name TEXT, password TEXT)";
         executeSqlQuery(sqlQuery);
+        printTableNames();
         insertUser("user1", "password1");
         insertUser("user2", "password2");
         insertUser("user3", "password3");
         printTable("users");
         updateUser("name", "user2", "userсhange1");
         printTable("users");
-        deleteUser("name","user3");
+        deleteUser("name", "user3");
         printTable("users");
         connection.close();
+    }
+
+    private void dropTableIfExist(String tableName) {
+        String sqlQuery = "DROP TABLE " + tableName;
+        try {
+            executeSqlQuery(sqlQuery);
+        } catch (SQLException e) {
+            //Gotcha
+        }
     }
 
     private void insertUser(String name, String password) throws SQLException {
@@ -67,7 +74,7 @@ public class Application {
             for (int i = 1; i <= colCount; i++) {
                 result.append(" ").append(resultSet.getString(i)).append(" |");
             }
-            result.replace(result.lastIndexOf(" |"), result.length(), "\n");
+            result.replace(result.lastIndexOf(" |"), result.length(), System.lineSeparator());
         }
         System.out.println(result.toString());
     }
