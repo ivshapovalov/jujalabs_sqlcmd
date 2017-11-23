@@ -1,10 +1,10 @@
 package juja.sqlcmd;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class Application {
+    private Connection connection;
+
     public static void main(String[] args) {
         new Application().simpleSQL();
     }
@@ -17,18 +17,28 @@ public class Application {
             return;
         }
 
-        Connection connection = null;
         try {
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/sqlcmd", "sqlcmd", "sqlcmd");
-            System.out.println("You've get a connection to sqlcmd");
+            connection = DriverManager
+                    .getConnection("jdbc:postgresql://localhost:5432/sqlcmd", "sqlcmd", "sqlcmd");
+            printTableNames();
         } catch (SQLException e) {
-            System.out.println("Something goes wrong. Connection failed!");
+            System.out.println("Something goes wrong. Connection failed! Reason: " + e.getMessage());
         } finally {
-            closeConnection(connection);
+            closeConnection();
         }
     }
 
-    private void closeConnection(Connection connection) {
+    private void printTableNames() throws SQLException {
+        DatabaseMetaData metaData = connection.getMetaData();
+        String[] types = {"TABLE"};
+        ResultSet tables = metaData.getTables(null, null, "%", types);
+        while (tables.next()) {
+            int tableNameIndex = 3;
+            System.out.println(tables.getString(tableNameIndex));
+        }
+    }
+
+    private void closeConnection() {
         try {
             connection.close();
         } catch (SQLException e) {
