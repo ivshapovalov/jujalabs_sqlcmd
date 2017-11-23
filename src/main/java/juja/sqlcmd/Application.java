@@ -30,11 +30,25 @@ public class Application {
         insertUser("user2", "password2");
         insertUser("user3", "password3");
         printTable("users");
+        updateUser("name", "user2", "userсhange1");
+        printTable("users");
+        deleteUser("name","user3");
+        printTable("users");
         connection.close();
     }
 
     private void insertUser(String name, String password) throws SQLException {
         String sqlQuery = String.format("INSERT INTO users(name, password) VALUES('%s','%s') ", name, password);
+        executeSqlQuery(sqlQuery);
+    }
+
+    private void updateUser(String colName, String oldValue, String newValue) throws SQLException {
+        String sqlQuery = String.format("UPDATE users SET %1$s='%3$s' WHERE %1$s='%2$s'", colName, oldValue, newValue);
+        executeSqlQuery(sqlQuery);
+    }
+
+    private void deleteUser(String colName, String value) throws SQLException {
+        String sqlQuery = String.format("DELETE FROM users WHERE %s='%s'", colName, value);
         executeSqlQuery(sqlQuery);
     }
 
