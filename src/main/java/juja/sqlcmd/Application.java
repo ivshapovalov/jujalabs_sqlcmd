@@ -23,12 +23,13 @@ public class Application {
         Class.forName(DB_DRIVER);
         connection = DriverManager
                 .getConnection(DB_CONNECTION, DB_USER, DB_PASSWORD);
+        printTableNames();
         String sqlQuery = "CREATE TABLE users(id SERIAL, name TEXT, password TEXT)";
         executeSqlQuery(sqlQuery);
-        insertUser("user1","password1");
-        insertUser("user2","password2");
-        insertUser("user3","password3");
-        printTableNames();
+        insertUser("user1", "password1");
+        insertUser("user2", "password2");
+        insertUser("user3", "password3");
+        printTable("users");
         connection.close();
     }
 
@@ -40,6 +41,21 @@ public class Application {
     private void executeSqlQuery(String sqlQuery) throws SQLException {
         Statement statement = connection.createStatement();
         statement.execute(sqlQuery);
+    }
+
+    private void printTable(String tableName) throws SQLException {
+        String sqlQuery = "SELECT * FROM " + tableName;
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(sqlQuery);
+        int colCount = resultSet.getMetaData().getColumnCount();
+        StringBuilder result = new StringBuilder();
+        while (resultSet.next()) {
+            for (int i = 1; i <= colCount; i++) {
+                result.append(" ").append(resultSet.getString(i)).append(" |");
+            }
+            result.replace(result.lastIndexOf(" |"), result.length(), "\n");
+        }
+        System.out.println(result.toString());
     }
 
     private void printTableNames() throws SQLException {
