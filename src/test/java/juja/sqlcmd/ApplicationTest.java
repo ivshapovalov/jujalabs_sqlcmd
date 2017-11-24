@@ -36,7 +36,8 @@ public class ApplicationTest {
     @Test
     public void out() throws SQLException, ClassNotFoundException {
         new Application().simpleSQL();
-        String expected = "users" + LINE_SEPARATOR +
+        String expected = "db is empty" + LINE_SEPARATOR +
+                "user" + LINE_SEPARATOR +
                 " 1 | user1 | password1" +LINE_SEPARATOR +
                 " 2 | user2 | password2" +LINE_SEPARATOR +
                 " 3 | user3 | password3" +LINE_SEPARATOR +

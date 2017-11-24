@@ -15,23 +15,27 @@ public class Application {
 
     private Connection connection;
 
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+        new Application().simpleSQL();
+    }
+
     public void simpleSQL() throws SQLException, ClassNotFoundException {
         Class.forName(DB_DRIVER);
         connection = DriverManager
                 .getConnection(DB_CONNECTION, DB_USER, DB_PASSWORD);
-        dropTableIfExist("users");
-        String sqlQuery;
-        sqlQuery = "CREATE TABLE users(id SERIAL, name TEXT, password TEXT)";
+        dropTableIfExist("\"user\"");
+        printTableNames();
+        String sqlQuery = "CREATE TABLE \"user\"(id SERIAL PRIMARY KEY, name TEXT, password TEXT)";
         executeSqlQuery(sqlQuery);
         printTableNames();
         insertUser("user1", "password1");
         insertUser("user2", "password2");
         insertUser("user3", "password3");
-        printTable("users");
+        printTable("\"user\"");
         updateUser("name", "user2", "userсhange1");
-        printTable("users");
+        printTable("\"user\"");
         deleteUser("name", "user3");
-        printTable("users");
+        printTable("\"user\"");
         connection.close();
     }
 
@@ -45,17 +49,17 @@ public class Application {
     }
 
     private void insertUser(String name, String password) throws SQLException {
-        String sqlQuery = String.format("INSERT INTO users(name, password) VALUES('%s','%s') ", name, password);
+        String sqlQuery = String.format("INSERT INTO \"user\"(name, password) VALUES('%s','%s') ", name, password);
         executeSqlQuery(sqlQuery);
     }
 
     private void updateUser(String colName, String oldValue, String newValue) throws SQLException {
-        String sqlQuery = String.format("UPDATE users SET %1$s='%3$s' WHERE %1$s='%2$s'", colName, oldValue, newValue);
+        String sqlQuery = String.format("UPDATE \"user\" SET %1$s='%3$s' WHERE %1$s='%2$s'", colName, oldValue, newValue);
         executeSqlQuery(sqlQuery);
     }
 
     private void deleteUser(String colName, String value) throws SQLException {
-        String sqlQuery = String.format("DELETE FROM users WHERE %s='%s'", colName, value);
+        String sqlQuery = String.format("DELETE FROM \"user\" WHERE %s='%s'", colName, value);
         executeSqlQuery(sqlQuery);
     }
 
@@ -83,9 +87,13 @@ public class Application {
         DatabaseMetaData metaData = connection.getMetaData();
         String[] types = {"TABLE"};
         ResultSet tables = metaData.getTables(null, null, "%", types);
+        int tableNameIndex=0;
         while (tables.next()) {
-            int tableNameIndex = 3;
+            tableNameIndex = 3;
             System.out.println(tables.getString(tableNameIndex));
+        }
+        if (tableNameIndex==0) {
+            System.out.println("db is empty");
         }
     }
 }
