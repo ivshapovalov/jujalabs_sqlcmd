@@ -92,14 +92,12 @@ public class Application {
      */
     private String getTableData(String tableName) throws SQLException {
         String query = "SELECT * FROM \"" + tableName + "\"";
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
+        try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
             int columnCount = resultSet.getMetaData().getColumnCount();
             StringBuilder result = new StringBuilder();
             while (resultSet.next()) {
                 for (int i = 1; i <= columnCount; i++) {
-                    result.append(resultSet.getString(i))
-                            .append(" | ");
+                    result.append(resultSet.getString(i)).append(" | ");
                 }
                 result.replace(result.length() - 3, result.length(), "\n");
             }
