@@ -46,12 +46,11 @@ public class Application {
      * @throws SQLException if a database access error occurs
      */
     private void deleteUser(String userName) throws SQLException {
-        if (userName == null) {
-            System.err.println("Username is null.");
-        }
-        try (Statement statement = connection.createStatement()) {
-            String query = String.format("DELETE FROM \"user\" WHERE name = '%s'", userName);
-            statement.executeUpdate(query);
+        if (userName != null) {
+            try (Statement statement = connection.createStatement()) {
+                String query = String.format("DELETE FROM \"user\" WHERE name = '%s'", userName);
+                statement.executeUpdate(query);
+            }
         }
     }
 
@@ -76,11 +75,11 @@ public class Application {
      * @throws SQLException if a database access error occurs
      */
     private void showTableData(String tableName) throws SQLException {
-        if (tableName == null) {
+        if (tableName != null) {
+            System.out.println(getTableData(tableName));
+        } else{
             System.err.println("Can't display data. Table Name is Null");
-            return;
         }
-        System.out.println(getTableData(tableName));
     }
 
     /**
@@ -112,20 +111,20 @@ public class Application {
      *
      * @param nameAndPassword array of users and their passwords.
      *                        One element of array it is one user and his password.
-     *                        One element of array has format username=password.
+     *                        One element of array has format username|password.
      * @throws SQLException if a database access error occurs
      */
     private void addUsers(String[] nameAndPassword) throws SQLException {
         if (nameAndPassword == null) {
             System.err.println("List of users is null.");
-            return;
-        }
-        for (String oneNameAndPassword : nameAndPassword) {
-            if (oneNameAndPassword == null) {
-                System.err.println("Can't add some user. Name and password are Null");
-                return;
+        } else {
+            for (String oneNameAndPassword : nameAndPassword) {
+                if (oneNameAndPassword != null) {
+                    addOneUser(oneNameAndPassword.split("\\|"));
+                } else {
+                    System.err.println("Can't add some user. Name and password are Null");
+                }
             }
-            addOneUser(oneNameAndPassword.split("\\|"));
         }
 
     }
@@ -153,20 +152,17 @@ public class Application {
      * @throws SQLException if a database access error occurs
      */
     private void createTable(String tableName) throws SQLException {
-        if (isNotCorrectTableName(tableName)) {
-            System.err.println("Wrong table name.");
-            return;
+        if (!isTableExist(tableName)) {
+            String sql = "CREATE TABLE \"" + tableName + "\"" +
+                    "(id SERIAL PRIMARY KEY," +
+                    " name TEXT NOT NULL," +
+                    " password TEXT NOT NULL)";
+            try (Statement statement = connection.createStatement()) {
+                statement.execute(sql);
+            }
         }
-        if (isTableExist(tableName)) {
-            System.err.println("Table is already exist.");
-            return;
-        }
-        String sql = "CREATE TABLE \"" + tableName + "\"" +
-                "(id SERIAL PRIMARY KEY," +
-                " name TEXT NOT NULL," +
-                " password TEXT NOT NULL)";
-        try (Statement statement = connection.createStatement()) {
-            statement.execute(sql);
+        else {
+            System.err.println("Table is already exist. ");
         }
     }
 
@@ -189,19 +185,6 @@ public class Application {
 
 
     /**
-     * The method checks if the table name is entered correctly
-     *
-     * @param tableName name of the table
-     * @return true if first char of string is digital or equals NULL, else false
-     */
-    private boolean isNotCorrectTableName(String tableName) {
-        if (tableName == null || Character.isDigit(tableName.charAt(0))) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * The method prints to the console the names of all tables created in the database.
      *
      * @return the list of all tables in the database. Each following table with a new row.
@@ -211,11 +194,12 @@ public class Application {
         String result = "";
         try (Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery("SELECT relname FROM pg_stat_user_tables");
-            if (!resultSet.isBeforeFirst()) {
-                return "db is empty.";
-            }
-            while (resultSet.next()) {
-                result += resultSet.getString(1) + "\n";
+            if (resultSet.isBeforeFirst()) {
+                while (resultSet.next()) {
+                    result += resultSet.getString(1) + "\n";
+                }
+            } else {
+                result = "db is empty.";
             }
         }
         return result;
