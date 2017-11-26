@@ -8,14 +8,13 @@ import java.sql.Statement;
 
 public class Application {
 
-
     private final static String SERVER = "localhost";
     private final static String PORT = "5432";
     private final static String DB_NAME = "sqlcmd";
     private final static String USER_NAME = "sqlcmd";
     private final static String PASSWORD = "sqlcmd";
     private Connection connection;
-    private String[] users = {"user1=password1", "user2=password2", "user3=password3"};
+    private String[] users = {"user1|password1", "user2|password2", "user3|password3"};
 
     public static void main(String[] args) {
         try {
@@ -85,7 +84,7 @@ public class Application {
     }
 
     /**
-     *The method returns all data from the table.
+     * The method returns all data from the table.
      *
      * @param tableName the name of the table whose data should be returned
      * @return all data from the table in the format Field1 | Field2 | ... | FieldN
@@ -126,7 +125,7 @@ public class Application {
                 System.err.println("Can't add some user. Name and password are Null");
                 return;
             }
-            addOneUser(oneNameAndPassword.split("="));
+            addOneUser(oneNameAndPassword.split("\\|"));
         }
 
     }
@@ -224,9 +223,10 @@ public class Application {
 
     /**
      * Establishes a connection to the server
-     * @return  a connection to the URL
+     *
+     * @return a connection to the URL
      * @throws ClassNotFoundException if the class cannot be located
-     * @throws SQLException if a database access error occurs
+     * @throws SQLException           if a database access error occurs
      */
     private Connection getConnection() throws ClassNotFoundException, SQLException {
         Class.forName("org.postgresql.Driver");
@@ -236,6 +236,7 @@ public class Application {
 
     /**
      * Method removes the table from database.
+     *
      * @param tableName name of the table
      * @throws SQLException if a database access error occurs
      */
