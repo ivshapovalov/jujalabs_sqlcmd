@@ -76,8 +76,9 @@ public class Application {
      */
     private void showTableData(String tableName) throws SQLException {
         if (tableName != null) {
-            System.out.println(getTableData(tableName));
-        } else{
+            String tableData = getTableData(tableName);
+            System.out.println(tableData);
+        } else {
             System.err.println("Can't display data. Table Name is Null");
         }
     }
@@ -109,18 +110,18 @@ public class Application {
     /**
      * Method adds users to the table "user".
      *
-     * @param nameAndPassword array of users and their passwords.
-     *                        One element of array it is one user and his password.
-     *                        One element of array has format username|password.
+     * @param users array of users and their passwords.
+     *              One element of array it is one user and his password.
+     *              One element of array has format username|password.
      * @throws SQLException if a database access error occurs
      */
-    private void addUsers(String[] nameAndPassword) throws SQLException {
-        if (nameAndPassword == null) {
+    private void addUsers(String[] users) throws SQLException {
+        if (users == null) {
             System.err.println("List of users is null.");
         } else {
-            for (String oneNameAndPassword : nameAndPassword) {
-                if (oneNameAndPassword != null) {
-                    addOneUser(oneNameAndPassword.split("\\|"));
+            for (String oneUser : users) {
+                if (oneUser != null) {
+                    addOneUser(oneUser.split("\\|"));
                 } else {
                     System.err.println("Can't add some user. Name and password are Null");
                 }
@@ -160,8 +161,7 @@ public class Application {
             try (Statement statement = connection.createStatement()) {
                 statement.execute(sql);
             }
-        }
-        else {
+        } else {
             System.err.println("Table is already exist. ");
         }
     }
