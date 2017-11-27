@@ -1,7 +1,6 @@
 package juja.sqlcmd;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,13 +38,9 @@ public class Application {
         connection.close();
     }
 
-    private void dropTableIfExists(String tableName) {
-        String sqlQuery = "DROP TABLE " + tableName;
-        try {
-            executeSqlQuery(sqlQuery);
-        } catch (SQLException e) {
-            //Gotcha
-        }
+    private void dropTableIfExists(String tableName) throws SQLException {
+        String sqlQuery = "DROP TABLE IF EXISTS" + tableName;
+        executeSqlQuery(sqlQuery);
     }
 
     private void insertUser(String name, String password) throws SQLException {
@@ -86,16 +81,17 @@ public class Application {
     }
 
     private void printTableNames() throws SQLException {
-        DatabaseMetaData metaData = connection.getMetaData();
-        try (ResultSet tables = metaData.getTables(null, null, "%", new String[]{"TABLE"})) {
-            int tableNameIndex = 0;
-            while (tables.next()) {
-                tableNameIndex = 3;
-                System.out.println(tables.getString(tableNameIndex));
-            }
-            if (tableNameIndex == 0) {
-                System.out.println("db is empty");
+        StringBuilder result = new StringBuilder();
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery("SELECT relname FROM pg_stat_user_tables");
+            if (resultSet.isBeforeFirst()) {
+                while (resultSet.next()) {
+                    result.append(resultSet.getString(1)).append(System.lineSeparator());
+                }
+            }else{
+                result.append("db is empty");
             }
         }
+        System.out.println(result);
     }
 }
