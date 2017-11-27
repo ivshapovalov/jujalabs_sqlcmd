@@ -21,8 +21,8 @@ public class ApplicationTest {
 
     @Before
     public void setUpStreams() {
-        originalOut=System.out;
-        originalErr=System.err;
+        originalOut = System.out;
+        originalErr = System.err;
         System.setOut(new PrintStream(outContent));
         System.setErr(new PrintStream(errContent));
     }
@@ -38,16 +38,16 @@ public class ApplicationTest {
         new Application().simpleSQL();
         String expected = "db is empty" + LINE_SEPARATOR +
                 "user" + LINE_SEPARATOR +
-                " 1 | user1 | password1" +LINE_SEPARATOR +
-                " 2 | user2 | password2" +LINE_SEPARATOR +
-                " 3 | user3 | password3" +LINE_SEPARATOR +
+                " 1 | user1 | password1" + LINE_SEPARATOR +
+                " 2 | user2 | password2" + LINE_SEPARATOR +
+                " 3 | user3 | password3" + LINE_SEPARATOR +
                 LINE_SEPARATOR +
-                " 1 | user1 | password1" +LINE_SEPARATOR +
-                " 3 | user3 | password3" +LINE_SEPARATOR +
-                " 2 | userсhange1 | password2" +LINE_SEPARATOR +
+                " 1 | user1 | password1" + LINE_SEPARATOR +
+                " 3 | user3 | password3" + LINE_SEPARATOR +
+                " 2 | userсhange1 | password2" + LINE_SEPARATOR +
                 LINE_SEPARATOR +
-                " 1 | user1 | password1" +LINE_SEPARATOR +
-                " 2 | userсhange1 | password2" +LINE_SEPARATOR +
+                " 1 | user1 | password1" + LINE_SEPARATOR +
+                " 2 | userсhange1 | password2" + LINE_SEPARATOR +
                 LINE_SEPARATOR;
         assertEquals(expected, outContent.toString());
     }

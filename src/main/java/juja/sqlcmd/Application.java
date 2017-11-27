@@ -9,7 +9,7 @@ import java.sql.Statement;
 
 public class Application {
     private static final String DB_DRIVER = "org.postgresql.Driver";
-    private static final String DB_CONNECTION = "jdbc:postgresql://localhost:5432/sqlcmd";
+    private static final String DB_CONNECTION_URL = "jdbc:postgresql://localhost:5432/sqlcmd";
     private static final String DB_USER = "sqlcmd";
     private static final String DB_PASSWORD = "sqlcmd";
 
@@ -22,8 +22,8 @@ public class Application {
     public void simpleSQL() throws SQLException, ClassNotFoundException {
         Class.forName(DB_DRIVER);
         connection = DriverManager
-                .getConnection(DB_CONNECTION, DB_USER, DB_PASSWORD);
-        dropTableIfExist("\"user\"");
+                .getConnection(DB_CONNECTION_URL, DB_USER, DB_PASSWORD);
+        dropTableIfExists("\"user\"");
         printTableNames();
         String sqlQuery = "CREATE TABLE \"user\"(id SERIAL PRIMARY KEY, name TEXT, password TEXT)";
         executeSqlQuery(sqlQuery);
@@ -39,7 +39,7 @@ public class Application {
         connection.close();
     }
 
-    private void dropTableIfExist(String tableName) {
+    private void dropTableIfExists(String tableName) {
         String sqlQuery = "DROP TABLE " + tableName;
         try {
             executeSqlQuery(sqlQuery);
@@ -64,36 +64,38 @@ public class Application {
     }
 
     private void executeSqlQuery(String sqlQuery) throws SQLException {
-        Statement statement = connection.createStatement();
-        statement.execute(sqlQuery);
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(sqlQuery);
+        }
     }
 
     private void printTable(String tableName) throws SQLException {
         String sqlQuery = "SELECT * FROM " + tableName;
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(sqlQuery);
-        int colCount = resultSet.getMetaData().getColumnCount();
-        StringBuilder result = new StringBuilder();
-        while (resultSet.next()) {
-            for (int i = 1; i <= colCount; i++) {
-                result.append(" ").append(resultSet.getString(i)).append(" |");
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(sqlQuery)) {
+            int colCount = resultSet.getMetaData().getColumnCount();
+            StringBuilder result = new StringBuilder();
+            while (resultSet.next()) {
+                for (int i = 1; i <= colCount; i++) {
+                    result.append(" ").append(resultSet.getString(i)).append(" |");
+                }
+                result.replace(result.lastIndexOf(" |"), result.length(), System.lineSeparator());
             }
-            result.replace(result.lastIndexOf(" |"), result.length(), System.lineSeparator());
+            System.out.println(result.toString());
         }
-        System.out.println(result.toString());
     }
 
     private void printTableNames() throws SQLException {
         DatabaseMetaData metaData = connection.getMetaData();
-        String[] types = {"TABLE"};
-        ResultSet tables = metaData.getTables(null, null, "%", types);
-        int tableNameIndex=0;
-        while (tables.next()) {
-            tableNameIndex = 3;
-            System.out.println(tables.getString(tableNameIndex));
-        }
-        if (tableNameIndex==0) {
-            System.out.println("db is empty");
+        try (ResultSet tables = metaData.getTables(null, null, "%", new String[]{"TABLE"})) {
+            int tableNameIndex = 0;
+            while (tables.next()) {
+                tableNameIndex = 3;
+                System.out.println(tables.getString(tableNameIndex));
+            }
+            if (tableNameIndex == 0) {
+                System.out.println("db is empty");
+            }
         }
     }
 }
