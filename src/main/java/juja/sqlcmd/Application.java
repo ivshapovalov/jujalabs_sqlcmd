@@ -190,8 +190,8 @@ public class Application {
      */
     private String getTablesName() throws SQLException {
         String result = "";
-        try (Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery("SELECT relname FROM pg_stat_user_tables");
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT relname FROM pg_stat_user_tables")) {
             if (resultSet.isBeforeFirst()) {
                 while (resultSet.next()) {
                     result += resultSet.getString(1) + System.lineSeparator();
