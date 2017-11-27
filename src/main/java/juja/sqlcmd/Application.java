@@ -14,7 +14,7 @@ public class Application {
     private final static String USER_NAME = "sqlcmd";
     private final static String PASSWORD = "sqlcmd";
     private Connection connection;
-    private String[] users = {"user1|password1", "user2|password2", "user3|password3"};
+
 
     public static void main(String[] args) {
         try {
@@ -25,6 +25,7 @@ public class Application {
     }
 
     public void simpleSQL() throws ClassNotFoundException, SQLException {
+        String[] users = {"user1|password1", "user2|password2", "user3|password3"};
         connection = getConnection();
         deleteTable("user");
         System.out.println(getTablesName());
@@ -47,10 +48,14 @@ public class Application {
      */
     private void deleteUser(String userName) throws SQLException {
         if (userName != null) {
-            try (Statement statement = connection.createStatement()) {
-                String query = String.format("DELETE FROM \"user\" WHERE name = '%s'", userName);
-                statement.executeUpdate(query);
-            }
+            String query = String.format("DELETE FROM \"user\" WHERE name = '%s'", userName);
+            queryExecute(query);
+        }
+    }
+
+    private void queryExecute(String query) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(query);
         }
     }
 
@@ -62,10 +67,8 @@ public class Application {
      * @throws SQLException if a database access error occurs
      */
     private void changeUserName(String oldName, String newName) throws SQLException {
-        try (Statement statement = connection.createStatement()) {
-            String query = String.format("UPDATE \"user\" SET name = '%s' WHERE name = '%s'", newName, oldName);
-            statement.executeUpdate(query);
-        }
+        String query = String.format("UPDATE \"user\" SET name = '%s' WHERE name = '%s'", newName, oldName);
+        queryExecute(query);
     }
 
     /**
@@ -152,13 +155,11 @@ public class Application {
      */
     private void createTable(String tableName) throws SQLException {
         if (!isTableExist(tableName)) {
-            String sql = "CREATE TABLE \"" + tableName + "\"" +
+            String query = "CREATE TABLE \"" + tableName + "\"" +
                     "(id SERIAL PRIMARY KEY," +
                     " name TEXT NOT NULL," +
                     " password TEXT NOT NULL)";
-            try (Statement statement = connection.createStatement()) {
-                statement.execute(sql);
-            }
+            queryExecute(query);
         } else {
             System.err.println("Table is already exist. ");
         }
