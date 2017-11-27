@@ -99,7 +99,7 @@ public class Application {
                 for (int i = 1; i <= columnCount; i++) {
                     result.append(resultSet.getString(i)).append(" | ");
                 }
-                result.replace(result.length() - 3, result.length(), "\n");
+                result.replace(result.length() - 3, result.length(), System.lineSeparator());
             }
             return result.toString();
         }
@@ -194,7 +194,7 @@ public class Application {
             ResultSet resultSet = statement.executeQuery("SELECT relname FROM pg_stat_user_tables");
             if (resultSet.isBeforeFirst()) {
                 while (resultSet.next()) {
-                    result += resultSet.getString(1) + "\n";
+                    result += resultSet.getString(1) + System.lineSeparator();
                 }
             } else {
                 result = "db is empty.";

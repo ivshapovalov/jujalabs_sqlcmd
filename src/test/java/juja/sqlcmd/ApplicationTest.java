@@ -16,6 +16,7 @@ public class ApplicationTest {
 
     private final PrintStream originalOut = System.out;
     private final PrintStream originalErr = System.err;
+    private static final String LINE_SEPARATOR = System.lineSeparator();
 
     @Before
     public void setUpStreams() throws SQLException {
@@ -33,20 +34,20 @@ public class ApplicationTest {
     public void testloadApplication() {
         try {
             new Application().simpleSQL();
-            String expected = "db is empty.\n" +
-                    "user\n" +
-                    "\n" +
-                    "1 | user1 | password1\n" +
-                    "2 | user2 | password2\n" +
-                    "3 | user3 | password3\n" +
-                    "\n" +
-                    "1 | user1 | password1\n" +
-                    "3 | user3 | password3\n" +
-                    "2 | userсhange1 | password2\n" +
-                    "\n" +
-                    "1 | user1 | password1\n" +
-                    "2 | userсhange1 | password2\n" +
-                    "\n";
+            String expected = "db is empty." + LINE_SEPARATOR +
+                    "user" + LINE_SEPARATOR +
+                    LINE_SEPARATOR +
+                    "1 | user1 | password1" + LINE_SEPARATOR +
+                    "2 | user2 | password2" + LINE_SEPARATOR +
+                    "3 | user3 | password3" + LINE_SEPARATOR +
+                    LINE_SEPARATOR +
+                    "1 | user1 | password1" + LINE_SEPARATOR +
+                    "3 | user3 | password3" + LINE_SEPARATOR +
+                    "2 | userсhange1 | password2" + LINE_SEPARATOR +
+                    LINE_SEPARATOR +
+                    "1 | user1 | password1" + LINE_SEPARATOR +
+                    "2 | userсhange1 | password2" + LINE_SEPARATOR +
+                    LINE_SEPARATOR;
             assertEquals(expected,outContent.toString());
         } catch (ClassNotFoundException | SQLException e) {
             System.err.println("ERROR!" + e.getMessage());
