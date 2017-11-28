@@ -1,10 +1,6 @@
 package juja.sqlcmd;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class Application {
 
@@ -48,14 +44,11 @@ public class Application {
      */
     private void deleteUser(String userName) throws SQLException {
         if (userName != null) {
-            String query = String.format("DELETE FROM \"user\" WHERE name = '%s'", userName);
-            queryExecute(query);
-        }
-    }
-
-    private void queryExecute(String query) throws SQLException {
-        try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate(query);
+            String query = "DELETE FROM \"user\" WHERE name = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, userName);
+                statement.executeUpdate();
+            }
         }
     }
 
@@ -67,8 +60,12 @@ public class Application {
      * @throws SQLException if a database access error occurs
      */
     private void changeUserName(String oldName, String newName) throws SQLException {
-        String query = String.format("UPDATE \"user\" SET name = '%s' WHERE name = '%s'", newName, oldName);
-        queryExecute(query);
+        String query = "UPDATE \"user\" SET name = ? WHERE name = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, newName);
+            statement.setString(2, oldName);
+            statement.executeUpdate();
+        }
     }
 
     /**
@@ -78,12 +75,8 @@ public class Application {
      * @throws SQLException if a database access error occurs
      */
     private void showTableData(String tableName) throws SQLException {
-        if (tableName != null) {
-            String tableData = getTableData(tableName);
-            System.out.println(tableData);
-        } else {
-            System.err.println("Can't display data. Table Name is Null");
-        }
+        String tableData = getTableData(tableName);
+        System.out.println(tableData);
     }
 
     /**
@@ -94,18 +87,24 @@ public class Application {
      * @throws SQLException if a database access error occurs
      */
     private String getTableData(String tableName) throws SQLException {
-        String query = "SELECT * FROM \"" + tableName + "\"";
-        try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
-            int columnCount = resultSet.getMetaData().getColumnCount();
-            StringBuilder result = new StringBuilder();
-            while (resultSet.next()) {
-                for (int i = 1; i <= columnCount; i++) {
-                    result.append(resultSet.getString(i)).append(" | ");
+        String result;
+        if (tableName != null) {
+            String query = "SELECT * FROM \"" + tableName + "\"";
+            try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
+                int columnCount = resultSet.getMetaData().getColumnCount();
+                StringBuilder tableData = new StringBuilder();
+                while (resultSet.next()) {
+                    for (int i = 1; i <= columnCount; i++) {
+                        tableData.append(resultSet.getString(i)).append(" | ");
+                    }
+                    tableData.replace(tableData.length() - 3, tableData.length(), System.lineSeparator());
                 }
-                result.replace(result.length() - 3, result.length(), System.lineSeparator());
+                result = tableData.toString();
             }
-            return result.toString();
+        } else {
+            result = "Can't display data. Table Name is Null.";
         }
+        return result;
     }
 
     /**
@@ -154,31 +153,12 @@ public class Application {
      * @throws SQLException if a database access error occurs
      */
     private void createTable(String tableName) throws SQLException {
-        if (!isTableExist(tableName)) {
-            String query = "CREATE TABLE \"" + tableName + "\"" +
-                    "(id SERIAL PRIMARY KEY," +
-                    " name TEXT NOT NULL," +
-                    " password TEXT NOT NULL)";
-            queryExecute(query);
-        } else {
-            System.err.println("Table is already exist. ");
-        }
-    }
-
-    /**
-     * The method checks if the specified table exists in the database.
-     *
-     * @param tableName name of the table.
-     * @return true if table exist, else false
-     * @throws SQLException if a database access error occurs
-     */
-    private boolean isTableExist(String tableName) throws SQLException {
-        String query = "SELECT EXISTS ( SELECT 1" +
-                " FROM information_schema.tables WHERE  table_name = '" + tableName + "')";
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
-            resultSet.next();
-            return resultSet.getBoolean(1);
+        String query = "CREATE TABLE IF NOT EXISTS \"" + tableName + "\"" +
+                "(id SERIAL PRIMARY KEY," +
+                " name TEXT NOT NULL," +
+                " password TEXT NOT NULL)";
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(query);
         }
     }
 
