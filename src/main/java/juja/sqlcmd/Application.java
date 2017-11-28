@@ -182,7 +182,6 @@ public class Application {
         }
     }
 
-
     /**
      * The method prints to the console the names of all tables created in the database.
      *
