@@ -3,10 +3,11 @@ package juja.sqlcmd;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class DatabaseManagerTest {
-    DatabaseManager databaseManager;
+    private DatabaseManager databaseManager;
 
     @Before
     public void init() {
@@ -14,14 +15,14 @@ public class DatabaseManagerTest {
     }
 
     @Test
-    public void testSuccessfulConnection() {
-        boolean expected = databaseManager.connect("sqlcmd", "sqlcmd", "sqlcmd");
-        assertEquals(expected, true);
+    public void testCorrectConnection() {
+        assertTrue(databaseManager.connect("sqlcmd", "sqlcmd", "sqlcmd"));
     }
 
     @Test
-    public void testUnSuccessfulConnection() {
-        boolean expected = databaseManager.connect("NotSqlcmd", "sqlcmd", "sqlcmd");
-        assertEquals(expected, false);
+    public void testConnectionWithWrongData() {
+        assertFalse(databaseManager.connect("Notsqlcmd", "sqlcmd", "sqlcmd"));
+        assertFalse(databaseManager.connect("sqlcmd", "Notsqlcmd", "sqlcmd"));
+        assertFalse(databaseManager.connect("sqlcmd", "sqlcmd", "Notsqlcmd"));
     }
 }
