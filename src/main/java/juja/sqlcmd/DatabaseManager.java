@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DatabaseManager {
     private static final String PORT = "5432";
-    private final static String SERVER = "localhost";
+    private static final  String SERVER = "localhost";
     private Connection connection;
 
     public boolean connect(String database, String user, String password) {
@@ -16,10 +16,10 @@ public class DatabaseManager {
             connection = DriverManager.getConnection(dbConnectionUrl, user, password);
             return true;
         } catch (ClassNotFoundException e) {
-            System.err.println("Driver not found.");
+            System.err.println("The driver was not found.");
             return false;
         } catch (SQLException e) {
-            System.err.println("Connection not established.");
+            System.err.println("Connection is not established.");
             return false;
         }
     }

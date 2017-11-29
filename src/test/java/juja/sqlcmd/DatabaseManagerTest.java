@@ -17,23 +17,23 @@ public class DatabaseManagerTest {
     }
 
     @Test
-    public void connectTest() {
+    public void testConnect() {
 
         assertTrue(databaseManager.connect("sqlcmd", "sqlcmd", "sqlcmd"));
     }
 
     @Test
-    public void connectIfDatabaseNotExist() {
+    public void testConnectIfDatabaseNotExist() {
 
         assertFalse(databaseManager.connect("noDatabase", "sqlcmd", "sqlcmd"));
     }
     @Test
-    public void connectIfWrongUser() {
+    public void testConnectIfWrongUser() {
 
         assertFalse(databaseManager.connect("sqlcmd", "wrongUser", "sqlcmd"));
     }
     @Test
-    public void connectIfWrongPassword() {
+    public void testConnectIfWrongPassword() {
 
         assertFalse(databaseManager.connect("sqlcmd", "sqlcmd", "wrongPassword"));
     }
