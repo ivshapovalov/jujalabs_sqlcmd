@@ -20,9 +20,17 @@ public class DatabaseManagerTest {
     }
 
     @Test
-    public void testConnectionWithWrongData() {
+    public void testConnectionWithWrongDatabase() {
         assertFalse(databaseManager.connect("Notsqlcmd", "sqlcmd", "sqlcmd"));
+    }
+
+    @Test
+    public void testConnectionWithWrongUser() {
         assertFalse(databaseManager.connect("sqlcmd", "Notsqlcmd", "sqlcmd"));
+    }
+
+    @Test
+    public void testConnectionWithWrongPassword() {
         assertFalse(databaseManager.connect("sqlcmd", "sqlcmd", "Notsqlcmd"));
     }
 }
