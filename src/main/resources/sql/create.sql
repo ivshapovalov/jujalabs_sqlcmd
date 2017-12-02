@@ -8,39 +8,33 @@ CREATE TABLE IF NOT EXISTS "customer" (
   "id"      SERIAL PRIMARY KEY,
   "name"    VARCHAR(255) NOT NULL,
   "surname" VARCHAR(255) NOT NULL,
-  "age"     INT2         NOT NULL,
-  "shop_id" INT          NOT NULL
+  "age"     SMALLINT     NOT NULL,
+  "shop_id" INTEGER      NOT NULL,
+  FOREIGN KEY ("shop_id") REFERENCES "shop" ("id")
 );
 
 CREATE TABLE IF NOT EXISTS "purchase" (
   "id"          SERIAL PRIMARY KEY,
   "date"        TIMESTAMP NOT NULL,
-  "customer_id" INT       NOT NULL,
-  UNIQUE ("date","customer_id")
+  "customer_id" INTEGER   NOT NULL,
+  UNIQUE ("date", "customer_id"),
+  FOREIGN KEY ("customer_id") REFERENCES "customer" ("id")
 );
 
-CREATE TABLE "product" (
+CREATE TABLE IF NOT EXISTS "product" (
+  "id"    SERIAL PRIMARY KEY,
+  "name"  VARCHAR(255) NOT NULL,
+  "price" MONEY        NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS "purchase_detail" (
   "id"          SERIAL PRIMARY KEY,
-  "name"        VARCHAR(255) NOT NULL,
-  "price"       MONEY        NOT NULL
+  "quantity"    INT2    NOT NULL,
+  "price"       MONEY   NOT NULL,
+  "shop_id"     INTEGER NOT NULL,
+  "purchase_id" INTEGER NOT NULL,
+  "product_id"  INTEGER NOT NULL,
+  FOREIGN KEY ("product_id") REFERENCES "product" ("id"),
+  FOREIGN KEY ("purchase_id") REFERENCES "purchase" ("id"),
+  FOREIGN KEY ("shop_id") REFERENCES "shop" ("id")
 );
-
-CREATE TABLE "purchase_detail" (
-  "id"          SERIAL PRIMARY KEY,
-  "quantity"    INT2  NOT NULL,
-  "price"       MONEY NOT NULL,
-  "shop_id"     INT   NOT NULL,
-  "purchase_id" INT   NOT NULL,
-  "product_id"  INT   NOT NULL
-);
-
-ALTER TABLE "customer"
-  ADD FOREIGN KEY ("shop_id") REFERENCES "shop" ("id");
-
-ALTER TABLE "purchase"
-  ADD FOREIGN KEY ("customer_id") REFERENCES "customer" ("id");
-
-ALTER TABLE "purchase_detail"
-  ADD FOREIGN KEY ("product_id") REFERENCES "product" ("id"),
-  ADD FOREIGN KEY ("purchase_id") REFERENCES "purchase" ("id"),
-  ADD FOREIGN KEY ("shop_id") REFERENCES "shop" ("id");
