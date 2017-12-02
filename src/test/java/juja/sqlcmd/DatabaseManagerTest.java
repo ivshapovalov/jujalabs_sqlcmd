@@ -15,7 +15,7 @@ public class DatabaseManagerTest {
     }
 
     @Test
-    public void connectWhenValidDataReturnsTrue() {
+    public void connectWhenValidAllParametersReturnsTrue() {
         assertTrue(databaseManager.connect("sqlcmd", "sqlcmd", "sqlcmd"));
     }
 
