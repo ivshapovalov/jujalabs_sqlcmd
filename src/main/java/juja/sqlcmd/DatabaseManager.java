@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DatabaseManager {
     private static final String PORT = "5432";
-    private static final  String SERVER = "localhost";
+    private static final String SERVER = "localhost";
     private Connection connection;
 
     public boolean connect(String database, String user, String password) {
@@ -15,11 +15,7 @@ public class DatabaseManager {
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(dbConnectionUrl, user, password);
             return true;
-        } catch (ClassNotFoundException e) {
-            System.err.println("The driver was not found.");
-            return false;
-        } catch (SQLException e) {
-            System.err.println("Connection is not established.");
+        } catch (ClassNotFoundException | SQLException e) {
             return false;
         }
     }

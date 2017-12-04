@@ -6,10 +6,8 @@ import org.junit.Test;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-
 public class DatabaseManagerTest {
     private DatabaseManager databaseManager;
-
 
     @Before
     public void setup() {
@@ -17,24 +15,22 @@ public class DatabaseManagerTest {
     }
 
     @Test
-    public void testConnect() {
-
+    public void testConnectionWithCorrectParameters() {
         assertTrue(databaseManager.connect("sqlcmd", "sqlcmd", "sqlcmd"));
     }
 
     @Test
-    public void testConnectIfDatabaseNotExist() {
-
+    public void testConnectionIfDatabaseNotExists() {
         assertFalse(databaseManager.connect("noDatabase", "sqlcmd", "sqlcmd"));
     }
-    @Test
-    public void testConnectIfWrongUser() {
 
+    @Test
+    public void testConnectionIfWrongUser() {
         assertFalse(databaseManager.connect("sqlcmd", "wrongUser", "sqlcmd"));
     }
-    @Test
-    public void testConnectIfWrongPassword() {
 
+    @Test
+    public void testConnectionIfWrongPassword() {
         assertFalse(databaseManager.connect("sqlcmd", "sqlcmd", "wrongPassword"));
     }
 }
