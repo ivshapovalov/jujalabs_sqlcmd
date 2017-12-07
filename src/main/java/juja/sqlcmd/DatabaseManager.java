@@ -11,10 +11,10 @@ public class DatabaseManager {
 
     private Connection connection;
 
-    boolean connect(String database, String user, String password) {
+    public boolean connect(String database, String user, String password) {
         try {
             Class.forName("org.postgresql.Driver");
-            connection = DriverManager.getConnection(DB_CONNECTION_URL + database, user, password);
+            connection = DriverManager.getConnection(DB_CONNECTION_URL + database+"?loggerLevel=OFF", user, password);
             return true;
         } catch (ClassNotFoundException | SQLException e) {
             return false;
@@ -23,7 +23,8 @@ public class DatabaseManager {
 
     public String[] getTableNames() throws SQLException {
         String sqlQuery = "SELECT relname FROM pg_stat_user_tables";
-        try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        try (Statement statement = connection
+                .createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
              ResultSet resultSet = statement.executeQuery(sqlQuery)) {
             int size = 0;
             if (resultSet.last()) {
