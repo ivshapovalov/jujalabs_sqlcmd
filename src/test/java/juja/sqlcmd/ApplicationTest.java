@@ -24,6 +24,7 @@ public class ApplicationTest {
         originalErr = System.err;
         System.setOut(new PrintStream(outContent));
         System.setErr(new PrintStream(errContent));
+
     }
 
     @After
