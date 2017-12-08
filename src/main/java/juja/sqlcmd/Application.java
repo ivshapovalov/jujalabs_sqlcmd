@@ -9,9 +9,10 @@ public class Application {
     private static final String DB_USER = "sqlcmd";
     private static final String DB_PASSWORD = "sqlcmd";
     private static final String TABLE_NAME = "user";
+    public static final String SHOW_EXISTING_TABLES_NAME = "SELECT * FROM pg_catalog.pg_tables WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema';";
     private static final String LINE_SEPARATOR = System.lineSeparator();
+    public static final String COLUMN_SEPARATOR = " | ";
     private Connection connection;
-
 
     public static void main(String[] arg) throws SQLException {
         new Application().simpleSQL();
@@ -20,22 +21,21 @@ public class Application {
     public void simpleSQL() throws SQLException {
         checkJDBCDriver();
         createDbConnection();
-        dropTableWithName(TABLE_NAME);
         showExistingTablesName();
         createTable(TABLE_NAME);
         for (int i = 1; i < 4; i++) {
             addUser("user" + i, "password" + i);
         }
         showExistingTablesName();
-        showExistingRecordsOfTable(TABLE_NAME);
+        showExistingDataInTable(TABLE_NAME);
         updateDataByTitle("user2", "userchange1", TABLE_NAME, "name");
-        showExistingRecordsOfTable(TABLE_NAME);
-        deleteCortegeByTitle(TABLE_NAME, "name", "user3");
-        showExistingRecordsOfTable(TABLE_NAME);
+        showExistingDataInTable(TABLE_NAME);
+        deleteDataByTitle(TABLE_NAME, "name", "user3");
+        showExistingDataInTable(TABLE_NAME);
         connection.close();
     }
 
-    private void deleteCortegeByTitle(String tableName, String columnName, String title) throws SQLException {
+    private void deleteDataByTitle(String tableName, String columnName, String title) throws SQLException {
         String sqlQuery = String.format("DELETE FROM \"%1$s\" WHERE %2$s = ? ", tableName, columnName);
         try (PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)) {
             preparedStatement.setString(1, title);
@@ -50,68 +50,41 @@ public class Application {
         }
     }
 
-    private void showExistingRecordsOfTable(String tableName) throws SQLException {
-        try (Statement statement = connection.createStatement()) {
+    private void showExistingDataInTable(String tableName) throws SQLException {
+        String sqlQuery = String.format("SELECT * FROM \"%s\"", tableName);
+        try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(sqlQuery);) {
             if (tableName != null) {
-                String sqlQuery = String.format("SELECT * FROM \"%s\"", tableName);
-                ResultSet resultSet = statement.executeQuery(sqlQuery);
                 int columnCount = resultSet.getMetaData().getColumnCount();
-
                 StringBuilder tableData = new StringBuilder();
                 while (resultSet.next()) {
                     for (int i = 1; i <= columnCount; i++) {
-                        tableData.append(resultSet.getString(i)).append(" | ");
+                        tableData.append(resultSet.getString(i)).append(COLUMN_SEPARATOR);
                     }
-                    tableData.replace(tableData.length() - 3, tableData.length(), LINE_SEPARATOR);
+                    int startPosition = tableData.length() - COLUMN_SEPARATOR.length();
+                    int endPosition = tableData.length();
+                    tableData.replace(startPosition, endPosition, LINE_SEPARATOR);
                 }
                 System.out.println(tableData.toString());
             }
         }
-
     }
 
-    private void addUser(String userName, String userPassword) throws SQLException {
+    private void addUser(String userName, String userPassword) throws SQLException, NullPointerException {
+        String sqlQuery = String.format("INSERT INTO \"%s\"(name, password) VALUES('%s','%s')", TABLE_NAME, userName, userPassword);
         try (Statement statement = connection.createStatement()) {
-            if (userName != null && userPassword != null) {
-                // Why didn't suit here such expression "INSERT INTO public." + "\"" + TABLE_NAME + "\"" + "(password, name) "
-                //                                      + "VALUES (" + userPassword + ", " + userName + ");";
-                String sqlQuery = String.format("INSERT INTO \"" + TABLE_NAME + "\"(name, password) VALUES('%s','%s') ", userName, userPassword);
-                statement.executeUpdate(sqlQuery);
-            } else {
-                System.out.println("Wrong input");
-            }
-        }
-    }
-
-    private void dropTableWithName(String user) throws SQLException {
-        try (Statement statement = connection.createStatement()) {
-            String sqlQuery = "DROP TABLE IF EXISTS \"" + user + "\" CASCADE ;";
             statement.executeUpdate(sqlQuery);
         }
     }
 
     private void createTable(String tableName) throws SQLException {
         try (Statement statement = connection.createStatement()) {
-            String sqlQuery = "CREATE TABLE public.\"" + tableName + "\"" + LINE_SEPARATOR
-                    + "(" + LINE_SEPARATOR
-                    + "id SERIAL PRIMARY KEY ," + LINE_SEPARATOR
-                    + "name TEXT  NOT NULL," + LINE_SEPARATOR
-                    + "password TEXT  NOT NULL" + LINE_SEPARATOR
-                    + ")";
+            String sqlQuery = String.format("CREATE TABLE public.\"%s\"(id SERIAL PRIMARY KEY , name TEXT  NOT NULL,password TEXT  NOT NULL)", tableName);
             statement.executeUpdate(sqlQuery);
         }
     }
 
     private void showExistingTablesName() throws SQLException {
-        try (Statement statement = connection.createStatement()) {
-            String sqlQuery = "SELECT" + LINE_SEPARATOR
-                    + "*" + LINE_SEPARATOR
-                    + "FROM" + LINE_SEPARATOR
-                    + "pg_catalog.pg_tables" + LINE_SEPARATOR
-                    + "WHERE" + LINE_SEPARATOR
-                    + "schemaname != 'pg_catalog'" + LINE_SEPARATOR
-                    + "AND schemaname != 'information_schema';";
-            ResultSet rs = statement.executeQuery(sqlQuery);
+        try (Statement statement = connection.createStatement(); ResultSet rs = statement.executeQuery(SHOW_EXISTING_TABLES_NAME)) {
             System.out.println("Existing Tables:");
             if (rs.isBeforeFirst()) {
                 while (rs.next()) {
