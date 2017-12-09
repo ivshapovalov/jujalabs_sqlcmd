@@ -14,7 +14,7 @@ public class DatabaseManager {
     public boolean connect(String database, String user, String password) {
         try {
             Class.forName("org.postgresql.Driver");
-            connection = DriverManager.getConnection(DB_CONNECTION_URL + database+"?loggerLevel=OFF", user, password);
+            connection = DriverManager.getConnection(DB_CONNECTION_URL + database + "?loggerLevel=OFF", user, password);
             return true;
         } catch (ClassNotFoundException | SQLException e) {
             return false;
@@ -23,20 +23,25 @@ public class DatabaseManager {
 
     public String[] getTableNames() throws SQLException {
         String sqlQuery = "SELECT relname FROM pg_stat_user_tables";
-        try (Statement statement = connection
-                .createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        try (Statement statement =connection.createStatement();
              ResultSet resultSet = statement.executeQuery(sqlQuery)) {
-            int size = 0;
-            if (resultSet.last()) {
-                size = resultSet.getRow();
-                resultSet.beforeFirst();
-            }
+            int size = sizeOfQuery("pg_stat_user_tables");
             String[] tableNames = new String[size];
             int index = 0;
             while (resultSet.next()) {
                 tableNames[index++] = resultSet.getString(1);
             }
             return tableNames;
+        }
+    }
+
+    private Integer sizeOfQuery(String tableNameWhereQuery) throws SQLException {
+        String sqlQuery = "SELECT COUNT(*) as RECORDS FROM " + tableNameWhereQuery;
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(sqlQuery)) {
+            if (resultSet.next())
+                return resultSet.getInt("RECORDS");
+            else return 0;
         }
     }
 }

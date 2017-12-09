@@ -64,13 +64,13 @@ public class DatabaseManagerTest {
     }
 
     @Test
-    public void getTableNamesWhenNoTablesInDbReturnsEmptyStringArray() throws SQLException {
+    public void getTableNamesWhenNoTablesInDbReturnsEmptyArray() throws SQLException {
         String[] expected = new String[]{};
         assertArrayEquals(expected, databaseManager.getTableNames());
     }
 
     @Test
-    public void getTableNamesWhenTwoTablesInDbReturnsStringArrayWithTableNames() throws SQLException {
+    public void getTableNamesWhenTwoTablesInDbReturnsTableNamesArray() throws SQLException {
         executeSqlQuery("CREATE TABLE table1()");
         executeSqlQuery("CREATE TABLE table2()");
         String[] expected = new String[]{"table1", "table2"};
