@@ -1,39 +1,39 @@
 CREATE TABLE IF NOT EXISTS "buyer" (
-  "buyerId" SERIAL PRIMARY KEY,
-  "buyerName" TEXT NOT NULL,
-  "buyerSurname" TEXT NOT NULL,
+  "id" SERIAL PRIMARY KEY,
+  "name" TEXT NOT NULL,
+  "surname" TEXT NOT NULL,
   "age" SMALLINT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS "shop" (
-  "shopId" SERIAL PRIMARY KEY,
-  "shopName" TEXT NOT NULL UNIQUE,
+  "id" SERIAL PRIMARY KEY,
+  "name" TEXT NOT NULL UNIQUE,
   "address" TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS "plu" (
-  "pluId" SERIAL PRIMARY KEY,
-  "pluName" TEXT NOT NULL UNIQUE,
+CREATE TABLE IF NOT EXISTS "products" (
+  "id" SERIAL PRIMARY KEY,
+  "name" TEXT NOT NULL UNIQUE,
   "price" NUMERIC(10, 2) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS "order" (
-  "orderId" SERIAL PRIMARY KEY,
-  "orderDate" DATE NOT NULL,
-  "buyerId" INTEGER NOT NULL,
-  "shopId" INTEGER NOT NULL,
-  FOREIGN KEY ("shopId") REFERENCES "shop"("shopId"),
-  FOREIGN KEY ("buyerId") REFERENCES "buyer"("buyerId")
+  "id" SERIAL PRIMARY KEY,
+  "date" DATE NOT NULL,
+  "buyer_id" INTEGER NOT NULL,
+  "shop_id" INTEGER NOT NULL,
+  FOREIGN KEY ("shop_id") REFERENCES "shop"("id"),
+  FOREIGN KEY ("buyer_id") REFERENCES "buyer"("id")
   ON DELETE  CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS "lineOrder" (
-  "lineOrderId" SERIAL PRIMARY KEY,
-  "orderId" INTEGER NOT NULL,
-  "pluId" INTEGER NOT NULL,
+CREATE TABLE IF NOT EXISTS "line_order" (
+  "id" SERIAL PRIMARY KEY,
+  "order_id" INTEGER NOT NULL,
+  "goods_id" INTEGER NOT NULL,
   "quantity" NUMERIC(10, 2) NOT NULL,
   "price" NUMERIC(10, 2) NOT NULL,
-  FOREIGN KEY ("pluId") REFERENCES "plu"("pluId"),
-  FOREIGN KEY ("orderId") REFERENCES "order"("orderId")
+  FOREIGN KEY ("goods_id") REFERENCES "products"("id"),
+  FOREIGN KEY ("order_id") REFERENCES "order"("id")
   ON DELETE  CASCADE
 );
