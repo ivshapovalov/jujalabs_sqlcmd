@@ -22,10 +22,10 @@ public class DatabaseManager {
     }
 
     public String[] getTableNames() throws SQLException {
-        String sqlQuery = "SELECT relname FROM pg_stat_user_tables";
-        try (Statement statement =connection.createStatement();
+        String sqlQuery = "SELECT relname FROM pg_stat_user_tables ORDER BY relname";
+        try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(sqlQuery)) {
-            int size = sizeOfQuery("pg_stat_user_tables");
+            int size = numberOfEntries("pg_stat_user_tables");
             String[] tableNames = new String[size];
             int index = 0;
             while (resultSet.next()) {
@@ -35,8 +35,8 @@ public class DatabaseManager {
         }
     }
 
-    private Integer sizeOfQuery(String tableNameWhereQuery) throws SQLException {
-        String sqlQuery = "SELECT COUNT(*) as RECORDS FROM " + tableNameWhereQuery;
+    private int numberOfEntries(String tableName) throws SQLException {
+        String sqlQuery = "SELECT COUNT(*) as RECORDS FROM " + tableName;
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(sqlQuery)) {
             if (resultSet.next())

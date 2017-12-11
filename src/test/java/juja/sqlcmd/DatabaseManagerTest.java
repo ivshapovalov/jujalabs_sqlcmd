@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
@@ -20,6 +19,7 @@ public class DatabaseManagerTest {
     private static final String DB_NAME = "sqlcmd";
     private static final String DB_USER = "sqlcmd";
     private static final String DB_USER_PASSWORD = "sqlcmd";
+    private static final String TEST_DB_NAME = "testdatabase";
 
     private static Connection connection;
 
@@ -28,7 +28,10 @@ public class DatabaseManagerTest {
     @BeforeClass
     public static void setConnection() throws SQLException {
         connection = DriverManager.getConnection(DB_CONNECTION_URL + DB_NAME, DB_USER, DB_USER_PASSWORD);
-        dropAllTables();
+        executeSqlQuery("DROP DATABASE IF EXISTS " + TEST_DB_NAME);
+        executeSqlQuery("CREATE DATABASE " + TEST_DB_NAME);
+        connection.close();
+        connection = DriverManager.getConnection(DB_CONNECTION_URL + TEST_DB_NAME, DB_USER, DB_USER_PASSWORD);
     }
 
     @AfterClass
@@ -40,7 +43,7 @@ public class DatabaseManagerTest {
     public void init() throws SQLException {
         dropAllTables();
         databaseManager = new DatabaseManager();
-        databaseManager.connect(DB_NAME, DB_USER, DB_USER_PASSWORD);
+        databaseManager.connect(TEST_DB_NAME, DB_USER, DB_USER_PASSWORD);
     }
 
     @Test
@@ -74,9 +77,7 @@ public class DatabaseManagerTest {
         executeSqlQuery("CREATE TABLE table1()");
         executeSqlQuery("CREATE TABLE table2()");
         String[] expected = new String[]{"table1", "table2"};
-        String[] actual = databaseManager.getTableNames();
-        Arrays.sort(actual);
-        assertArrayEquals(expected, actual);
+        assertArrayEquals(expected, databaseManager.getTableNames());
     }
 
     private static void executeSqlQuery(String sqlQuery) throws SQLException {
