@@ -22,7 +22,6 @@ public class DatabaseManagerTest {
     private DatabaseManager databaseManager;
     private String dbName;
 
-
     @Before
     public void setup() {
         databaseManager = new DatabaseManager();
@@ -99,7 +98,6 @@ public class DatabaseManagerTest {
             statement.execute(String.format("CREATE DATABASE \"%s\" ", this.dbName));
             testConnection.close();
         }
-
     }
 
     private Connection getTestConnection() throws ClassNotFoundException, SQLException {
@@ -111,5 +109,4 @@ public class DatabaseManagerTest {
         Class.forName("org.postgresql.Driver");
         return DriverManager.getConnection(TEST_DB_CONNECTION_URL + dbName, USER, PASSWORD);
     }
-
 }
