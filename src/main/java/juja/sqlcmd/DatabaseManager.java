@@ -12,6 +12,7 @@ public class DatabaseManager {
     private static final String TABLE_NAMES_QUERY = "SELECT relname FROM pg_stat_user_tables ORDER BY relname";
     private static final String TABLE_ROWS_COUNT_QUERY = "SELECT count(*) FROM ?";
     private static final int VALID_TIMEOUT = 15;
+
     private Connection connection;
 
     public boolean connect(String database, String user, String password) {
@@ -60,7 +61,7 @@ public class DatabaseManager {
         try {
             connection.close();
         } catch (SQLException e) {
-            e.getMessage();
+            System.out.println(e.getMessage());
         }
     }
 }
