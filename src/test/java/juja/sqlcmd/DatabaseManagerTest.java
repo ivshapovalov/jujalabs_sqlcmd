@@ -11,28 +11,28 @@ public class DatabaseManagerTest {
     private DatabaseManager manager;
 
     @Before
-    public void initialize() {
+    public void setUp() {
         manager = new DatabaseManager();
     }
 
 
     @Test
-    public void connectionWithValidParametersHasToReturnTrue() {
+    public void connectWithValidParametersShouldReturnTrue() {
         assertTrue(manager.connect("sqlcmd", "sqlcmd", "sqlcmd"));
     }
 
     @Test
-    public void connectionWithWrongDatabaseNameHasToReturnFalse() {
+    public void connectWithWrongDatabaseNameShouldReturnFalse() {
      assertFalse(manager.connect("wrongName", "sqlcmd", "sqlcmd"));
     }
 
     @Test
-    public void connectionWithWrongUserNameHasToReturnFalse() {
+    public void connectWithWrongUserNameShouldReturnFalse() {
         assertFalse(manager.connect("sqlcmd", "wrongUserName", "sqlcmd"));
     }
 
     @Test
-    public void connectionWithWrongPasswordHasToReturnFalse() {
+    public void connectWithWrongPasswordShouldReturnFalse() {
         assertFalse(manager.connect("sqlcmd", "sqlcmd", "wrongPassword"));
     }
 }
