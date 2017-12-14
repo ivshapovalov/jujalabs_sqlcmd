@@ -22,7 +22,6 @@ public class Application {
         Class.forName(DB_DRIVER);
         connection = DriverManager
                 .getConnection(DB_CONNECTION_URL, DB_USER, DB_PASSWORD);
-        dropTableIfExists("\"user\"");
         printTableNames();
         String sqlQuery = "CREATE TABLE \"user\"(id SERIAL PRIMARY KEY, name TEXT, password TEXT)";
         executeSqlQuery(sqlQuery);
@@ -36,11 +35,6 @@ public class Application {
         deleteUser("name", "user3");
         printTable("\"user\"");
         connection.close();
-    }
-
-    private void dropTableIfExists(String tableName) throws SQLException {
-        String sqlQuery = "DROP TABLE IF EXISTS" + tableName;
-        executeSqlQuery(sqlQuery);
     }
 
     private void insertUser(String name, String password) throws SQLException {
