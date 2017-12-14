@@ -37,6 +37,7 @@ public class DatabaseManager {
     }
 
     public DataSet[] getTableData(String tableName) throws SQLException {
+        if (!hasTable(tableName)) return new DataSet[0];
         int tableSize = numberOfEntries(tableName);
         if (tableSize == 0) return new DataSet[0];
         String sqlQuery = String.format("SELECT * FROM %s", tableName);
@@ -46,6 +47,10 @@ public class DatabaseManager {
             int rowSize = rsmd.getColumnCount();
             return tableRows(resultSet, rowSize, tableSize);
         }
+    }
+
+    public void closeConnection() throws SQLException {
+        if (connection != null) connection.close();
     }
 
     private DataSet[] tableRows(ResultSet resultSet, int rowSize, int tableSize) throws SQLException {
@@ -70,5 +75,13 @@ public class DatabaseManager {
                 return resultSet.getInt("RECORDS");
             else return 0;
         }
+    }
+
+    private boolean hasTable(String tableName) throws SQLException {
+        String[] tableNames = getTableNames();
+        for (String name : tableNames) {
+            if (name.equals(tableName)) return true;
+        }
+        return false;
     }
 }
