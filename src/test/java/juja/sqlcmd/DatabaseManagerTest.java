@@ -62,33 +62,33 @@ public class DatabaseManagerTest {
     }
 
     @Test
-    public void connect_WithValidParameters_ShouldReturnTrue() {
+    public void connectWithValidParametersShouldReturnTrue() {
         assertTrue(databaseManager.connect(DB_NAME, DB_USER_NAME, DB_USER_PASSWORD));
     }
 
     @Test
-    public void connect_WithWrongDatabaseName_ShouldReturnFalse() {
+    public void connectWithWrongDatabaseNameShouldReturnFalse() {
         assertFalse(databaseManager.connect("wrongName", DB_USER_NAME, DB_USER_PASSWORD));
     }
 
     @Test
-    public void connect_WithWrongUserName_ShouldReturnFalse() {
+    public void connectWithWrongUserNameShouldReturnFalse() {
         assertFalse(databaseManager.connect(DB_NAME, "wrongUserName", DB_USER_PASSWORD));
     }
 
     @Test
-    public void connect_WithWrongPassword_ShouldReturnFalse() {
+    public void connectWithWrongPasswordShouldReturnFalse() {
         assertFalse(databaseManager.connect("sqlcmd", "sqlcmd", "wrongPassword"));
     }
 
     @Test
-    public void getTableNames_WhenThereAreNoTablesInDatabase_ShouldReturnEmptyArray() throws SQLException {
+    public void getTableNamesWhenThereAreNoTablesInDatabaseShouldReturnEmptyArray() throws SQLException {
         String[] expected = new String[0];
         assertArrayEquals("We Expected:", expected, databaseManager.getTableNames());
     }
 
     @Test
-    public void getTableNames_WhenThereAreTwoTablesInDatabase_ShouldReturnTableNamesArray() throws SQLException {
+    public void getTableNamesWhenThereAreTwoTablesInDatabaseShouldReturnTableNamesArray() throws SQLException {
         executeSqlQuery("CREATE TABLE public.test1()");
         executeSqlQuery("CREATE TABLE public.test2()");
         String[] expected = new String[]{"test1", "test2"};
