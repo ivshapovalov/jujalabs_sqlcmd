@@ -12,16 +12,14 @@ public class DatabaseManager {
     public boolean connect(String databaseName, String user, String password) {
         try {
             Class.forName(POSTGRESQL_DRIVER);
+            connection = DriverManager.getConnection(DB_CONNECTION_URL + databaseName, user, password);
+            return true;
         } catch (ClassNotFoundException e) {
             System.out.println("Please add JDBC jar to your project");
             return false;
-        }
-        try {
-            connection = DriverManager.getConnection(DB_CONNECTION_URL + databaseName, user, password);
         } catch (SQLException e) {
             System.out.println(String.format("Can not connect to %s with user = %s and password %s", databaseName, user, password));
             return false;
         }
-        return true;
     }
 }
