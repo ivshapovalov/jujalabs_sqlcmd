@@ -49,7 +49,7 @@ public class DatabaseManager {
         }
     }
 
-    public void closeConnection() throws SQLException {
+    public void close() throws SQLException {
         if (connection != null) connection.close();
     }
 

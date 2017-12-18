@@ -53,7 +53,7 @@ public class DatabaseManagerTest {
 
     @After
     public void closeDbManagerConnection() throws SQLException {
-        databaseManager.closeConnection();
+        databaseManager.close();
     }
 
     @Test
