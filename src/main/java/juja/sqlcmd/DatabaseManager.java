@@ -62,8 +62,8 @@ public class DatabaseManager {
             if(connection != null && !connection.isClosed()) {
                 connection.close();
             }
-        } catch (SQLException | NullPointerException sqlException) {
-            System.err.println("The connection is not established!");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
     }
 }
