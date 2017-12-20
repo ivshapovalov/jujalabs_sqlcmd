@@ -97,7 +97,7 @@ public class DatabaseManagerTest {
         databaseManager.connect(TEST_DB_NAME, DB_USER, DB_USER_PASSWORD);
         executeSqlQuery("CREATE TABLE test_table()");
         DataSet[] expected = new DataSet[]{};
-        assertArrayEquals(expected, databaseManager.getTableData("test_table()"));
+        assertArrayEquals(expected, databaseManager.getTableData("test_table"));
     }
 
     @Test

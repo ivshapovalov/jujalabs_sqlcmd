@@ -26,7 +26,7 @@ public class DataSet {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DataSet)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         DataSet dataSet = (DataSet) o;
         return size == dataSet.size && Arrays.equals(tableRow, dataSet.tableRow);
     }
