@@ -57,11 +57,13 @@ public class DatabaseManager {
         }
     }
 
-    public void closeConnection() {
+    public void close() {
         try {
-            connection.close();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            if(connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        } catch (SQLException | NullPointerException sqlException) {
+            System.err.println("The connection is not established!");
         }
     }
 }
