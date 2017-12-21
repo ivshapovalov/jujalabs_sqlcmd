@@ -1,8 +1,15 @@
 package juja.sqlcmd;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Date;
 
 import static junit.framework.TestCase.assertFalse;
@@ -89,6 +96,7 @@ public class DatabaseManagerTest {
         DataSet[] actual = databaseManager.getTableData("tableNotExist");
         assertArrayEquals(expected, actual);
     }
+
     @Test
     public void testGetTableDataWhenNoConnection() {
         DataSet[] expected = new DataSet[0];
