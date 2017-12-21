@@ -3,6 +3,7 @@ package juja.sqlcmd;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -35,13 +36,52 @@ public class DatabaseManager {
         }
     }
 
+    public DataSet[] getTableData(String tableName) throws SQLException {
+        if (!hasTable(tableName)) return new DataSet[0];
+        int tableSize = numberOfEntries(tableName);
+        if (tableSize == 0) return new DataSet[0];
+        String sqlQuery = String.format("SELECT * FROM %s", tableName);
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(sqlQuery)) {
+            ResultSetMetaData rsmd = resultSet.getMetaData();
+            int rowSize = rsmd.getColumnCount();
+            return tableRows(resultSet, rowSize, tableSize);
+        }
+    }
+
+    public void closeConnection() throws SQLException {
+        if (connection != null) connection.close();
+    }
+
+    private DataSet[] tableRows(ResultSet resultSet, int rowSize, int tableSize) throws SQLException {
+        DataSet[] tableData = new DataSet[tableSize];
+        int rowNumber = 0;
+        while (resultSet.next()) {
+            DataSet tableRow = new DataSet(rowSize);
+            for (int i = 0; i < rowSize; i++) {
+                String columnValue = resultSet.getString(i + 1);
+                tableRow.insertValue(i, columnValue);
+            }
+            tableData[rowNumber++] = tableRow;
+        }
+        return tableData;
+    }
+
     private int numberOfEntries(String tableName) throws SQLException {
-        String sqlQuery = "SELECT COUNT(*) as RECORDS FROM " + tableName;
+        String sqlQuery = String.format("SELECT COUNT(*) as RECORDS FROM %s", tableName);
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(sqlQuery)) {
             if (resultSet.next())
                 return resultSet.getInt("RECORDS");
             else return 0;
         }
+    }
+
+    private boolean hasTable(String tableName) throws SQLException {
+        String[] tableNames = getTableNames();
+        for (String name : tableNames) {
+            if (name.equals(tableName)) return true;
+        }
+        return false;
     }
 }
