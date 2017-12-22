@@ -4,22 +4,22 @@ import java.util.Arrays;
 
 public class DataSet {
 
-    private String[] oneRow;
+    private String[] row;
 
     DataSet(int length) {
         if (length < 0) {
             String exceptionMessage = String.format("DataSet length = %s, but should be greater or equal to 0.", length);
             throw new IllegalArgumentException(exceptionMessage);
         }
-        this.oneRow = new String[length];
+        this.row = new String[length];
     }
 
     public void add(int columnIndex, String value) {
-        if ((columnIndex >= 0) && (columnIndex < oneRow.length)) {
-            this.oneRow[columnIndex] = value;
+        if ((columnIndex >= 0) && (columnIndex < row.length)) {
+            this.row[columnIndex] = value;
         } else {
             String exceptionMessage = String.format("Column index = %s, but should be between 0 and %s.",
-                    columnIndex, oneRow.length - 1);
+                    columnIndex, row.length - 1);
             throw new IllegalArgumentException(exceptionMessage);
         }
 
@@ -30,11 +30,11 @@ public class DataSet {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DataSet dataSet = (DataSet) o;
-        return Arrays.equals(oneRow, dataSet.oneRow);
+        return Arrays.equals(row, dataSet.row);
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(oneRow);
+        return Arrays.hashCode(row);
     }
 }
