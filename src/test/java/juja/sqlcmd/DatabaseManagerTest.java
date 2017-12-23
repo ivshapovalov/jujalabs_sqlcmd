@@ -127,7 +127,6 @@ public class DatabaseManagerTest {
         DataSet[] actual = databaseManager.getTableData(tableName);
         executeQuery(String.format("DROP TABLE IF EXISTS %s", tableName));
         assertArrayEquals(expected, actual);
-
     }
 
     private DataSet createDataSet(String[] row) {

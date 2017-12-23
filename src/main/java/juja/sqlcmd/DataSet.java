@@ -22,7 +22,6 @@ public class DataSet {
                     columnIndex, row.length - 1);
             throw new IllegalArgumentException(exceptionMessage);
         }
-
     }
 
     @Override

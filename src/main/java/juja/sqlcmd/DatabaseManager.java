@@ -62,24 +62,27 @@ public class DatabaseManager {
         if ((connection != null) && (hasTable(tableName))) {
             try (Statement statement = connection.createStatement();
                  ResultSet resultSet = statement.executeQuery(query)) {
-                if (!resultSet.isBeforeFirst()) {
-                    return new DataSet[0];
+                if (resultSet.isBeforeFirst()) {
+                    return getDataSets(tableName, resultSet);
                 }
-                int tableRowsCount = getTableRowsCount(tableName);
-                DataSet[] tableData = new DataSet[tableRowsCount];
-                int columnCount = resultSet.getMetaData().getColumnCount();
-                for (int rowIndex = 0; resultSet.next(); rowIndex++) {
-                    tableData[rowIndex] = new DataSet(columnCount);
-                    for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
-                        tableData[rowIndex].add(columnIndex, resultSet.getString(columnIndex + 1));
-                    }
-                }
-                return tableData;
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
         }
         return new DataSet[0];
+    }
+
+    private DataSet[] getDataSets(String tableName, ResultSet resultSet) throws SQLException {
+        int tableRowsCount = getTableRowsCount(tableName);
+        DataSet[] tableData = new DataSet[tableRowsCount];
+        int columnCount = resultSet.getMetaData().getColumnCount();
+        for (int rowIndex = 0; resultSet.next(); rowIndex++) {
+            tableData[rowIndex] = new DataSet(columnCount);
+            for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+                tableData[rowIndex].add(columnIndex, resultSet.getString(columnIndex + 1));
+            }
+        }
+        return tableData;
     }
 
     private boolean hasTable(String tableName) {
