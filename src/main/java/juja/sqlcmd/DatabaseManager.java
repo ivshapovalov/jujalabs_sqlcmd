@@ -25,28 +25,43 @@ public class DatabaseManager {
         }
     }
 
-    public String[] getTableNames() throws SQLException {
+    public String[] TableNames() throws SQLException {
         String sqlQuery = "SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery, ResultSet.TYPE_SCROLL_SENSITIVE,
-                ResultSet.CONCUR_UPDATABLE); ResultSet resultSet = preparedStatement.executeQuery()) {
-            int tableSize = countTable(resultSet);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery,
+                ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_UPDATABLE);
+                ResultSet resultSet = preparedStatement.executeQuery()) {
+            int arraySize = NumberOfTables(resultSet);
             int index = 0;
-            String[] tableNames = new String[tableSize];
+            String[] tableNames = new String[arraySize];
             if (resultSet.isBeforeFirst()) {
                 while (resultSet.next()) {
                     tableNames[index++] = resultSet.getString(1);
                 }
                 return tableNames;
-            } else return new String[0];
+            } else {
+                return new String[0];
+            }
         }
     }
 
-    private int countTable(ResultSet resultSet) throws SQLException {
-        int count = 0;
-        while (resultSet.next()) {
-            count++;
+    public boolean close() {
+        try {
+            connection.close();
+            return true;
+        } catch (SQLException | NullPointerException e) {
+            e.printStackTrace();
+            return false;
         }
-        resultSet.beforeFirst();
-        return count;
+
+    }
+
+    private int NumberOfTables(ResultSet resultSet) throws SQLException {
+        int tableCounter = 0;
+        if (resultSet.last()) {
+            tableCounter = resultSet.getRow();
+            resultSet.beforeFirst();
+        }
+        return tableCounter;
     }
 }

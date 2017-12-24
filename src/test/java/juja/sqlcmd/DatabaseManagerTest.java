@@ -1,5 +1,6 @@
 package juja.sqlcmd;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -29,7 +30,6 @@ public class DatabaseManagerTest {
     public static void setTestingEnvironment() throws SQLException {
         connection = DriverManager.getConnection(
                 JDBC_URL, DB_USER_NAME, DB_USER_PASSWORD);
-        executeSqlQuery("DROP DATABASE IF EXISTS " + TEST_DB_NAME);
         executeSqlQuery("CREATE DATABASE " + TEST_DB_NAME);
         connection.close();
         connection = DriverManager.getConnection(
@@ -39,31 +39,36 @@ public class DatabaseManagerTest {
     @AfterClass
     public static void closeConnection() throws SQLException {
         connection.close();
+        connection = DriverManager.getConnection(JDBC_URL + DB_NAME, DB_USER_NAME, DB_USER_PASSWORD);
+        executeSqlQuery("DROP DATABASE IF EXISTS " + TEST_DB_NAME);
+        connection.close();
     }
 
     @Before
     public void setUp() throws SQLException {
         databaseManager = new DatabaseManager();
-        databaseManager.connect(TEST_DB_NAME, DB_USER_NAME, DB_USER_PASSWORD);
         dropAllTables();
+    }
+
+    @After
+    public void closeTestConnection() {
+        databaseManager.close();
     }
 
     private static void executeSqlQuery(String sqlQuery) throws SQLException {
         try (Statement statement = connection.createStatement()) {
-            statement.execute(sqlQuery);
-        }
-    }
-
-    private static void dropAllTables() throws SQLException {
-        try (Statement statement = connection.createStatement()) {
-            String sqlQuery = "DROP TABLE IF EXISTS CASCADE";
             statement.executeUpdate(sqlQuery);
         }
     }
 
+    private static void dropAllTables() throws SQLException {
+        String sqlQuery = "DROP SCHEMA public CASCADE; CREATE SCHEMA public;";
+        executeSqlQuery(sqlQuery);
+    }
+
     @Test
     public void connectWithValidParametersShouldReturnTrue() {
-        assertTrue(databaseManager.connect(DB_NAME, DB_USER_NAME, DB_USER_PASSWORD));
+        assertTrue(databaseManager.connect(TEST_DB_NAME, DB_USER_NAME, DB_USER_PASSWORD));
     }
 
     @Test
@@ -73,25 +78,27 @@ public class DatabaseManagerTest {
 
     @Test
     public void connectWithWrongUserNameShouldReturnFalse() {
-        assertFalse(databaseManager.connect(DB_NAME, "wrongUserName", DB_USER_PASSWORD));
+        assertFalse(databaseManager.connect(TEST_DB_NAME, "wrongUserName", DB_USER_PASSWORD));
     }
 
     @Test
     public void connectWithWrongPasswordShouldReturnFalse() {
-        assertFalse(databaseManager.connect("sqlcmd", "sqlcmd", "wrongPassword"));
+        assertFalse(databaseManager.connect(TEST_DB_NAME, DB_USER_NAME, "wrongPassword"));
     }
 
     @Test
-    public void getTableNamesWhenThereAreNoTablesInDatabaseShouldReturnEmptyArray() throws SQLException {
+    public void getTableNamesWhenNoTableInDatabaseShouldReturnEmptyArray() throws SQLException {
         String[] expected = new String[0];
-        assertArrayEquals("We Expected:", expected, databaseManager.getTableNames());
+        databaseManager.connect(TEST_DB_NAME, DB_USER_NAME, DB_USER_PASSWORD);
+        assertArrayEquals("We Expected:", expected, databaseManager.TableNames());
     }
 
     @Test
-    public void getTableNamesWhenThereAreTwoTablesInDatabaseShouldReturnTableNamesArray() throws SQLException {
+    public void getTableNamesWhenTwoTablesInDatabaseShouldReturnTableNamesArray() throws SQLException {
         executeSqlQuery("CREATE TABLE public.test1()");
         executeSqlQuery("CREATE TABLE public.test2()");
+        databaseManager.connect(TEST_DB_NAME, DB_USER_NAME, DB_USER_PASSWORD);
         String[] expected = new String[]{"test1", "test2"};
-        assertArrayEquals(expected, databaseManager.getTableNames());
+        assertArrayEquals(expected, databaseManager.TableNames());
     }
 }
