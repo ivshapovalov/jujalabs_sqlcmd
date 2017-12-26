@@ -23,9 +23,9 @@ public class DatabaseManagerTest {
     private static final String TEST_DB_CONNECTION_URL = "jdbc:postgresql://localhost:5432/";
 
     private static Connection connection;
+    private static String dbName;
 
     private DatabaseManager databaseManager;
-    private static String dbName;
 
     @BeforeClass
     public static void createConnection() throws SQLException, ClassNotFoundException {
