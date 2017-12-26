@@ -25,13 +25,13 @@ public class DatabaseManager {
         }
     }
 
-    public String[] TableNames() throws SQLException {
+    public String[] tableNames() throws SQLException {
         String sqlQuery = "SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery,
                 ResultSet.TYPE_SCROLL_SENSITIVE,
                 ResultSet.CONCUR_UPDATABLE);
-                ResultSet resultSet = preparedStatement.executeQuery()) {
-            int arraySize = NumberOfTables(resultSet);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            int arraySize = numberOfTables(resultSet);
             int index = 0;
             String[] tableNames = new String[arraySize];
             if (resultSet.isBeforeFirst()) {
@@ -56,7 +56,7 @@ public class DatabaseManager {
 
     }
 
-    private int NumberOfTables(ResultSet resultSet) throws SQLException {
+    private int numberOfTables(ResultSet resultSet) throws SQLException {
         int tableCounter = 0;
         if (resultSet.last()) {
             tableCounter = resultSet.getRow();

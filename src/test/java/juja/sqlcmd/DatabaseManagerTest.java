@@ -90,7 +90,7 @@ public class DatabaseManagerTest {
     public void getTableNamesWhenNoTableInDatabaseShouldReturnEmptyArray() throws SQLException {
         String[] expected = new String[0];
         databaseManager.connect(TEST_DB_NAME, DB_USER_NAME, DB_USER_PASSWORD);
-        assertArrayEquals("We Expected:", expected, databaseManager.TableNames());
+        assertArrayEquals("We Expected:", expected, databaseManager.tableNames());
     }
 
     @Test
@@ -99,6 +99,6 @@ public class DatabaseManagerTest {
         executeSqlQuery("CREATE TABLE public.test2()");
         databaseManager.connect(TEST_DB_NAME, DB_USER_NAME, DB_USER_PASSWORD);
         String[] expected = new String[]{"test1", "test2"};
-        assertArrayEquals(expected, databaseManager.TableNames());
+        assertArrayEquals(expected, databaseManager.tableNames());
     }
 }

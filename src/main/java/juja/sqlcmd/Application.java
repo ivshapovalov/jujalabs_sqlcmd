@@ -57,7 +57,7 @@ public class Application {
 
     private void showExistingDataInTable(String tableName) throws SQLException {
         String sqlQuery = String.format("SELECT * FROM \"%s\"", tableName);
-        try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(sqlQuery);) {
+        try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(sqlQuery)) {
             if (tableName != null) {
                 int columnCount = resultSet.getMetaData().getColumnCount();
                 StringBuilder tableData = new StringBuilder();
