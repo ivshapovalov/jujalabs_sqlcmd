@@ -89,12 +89,11 @@ public class DatabaseManager {
         String query = String.format("SELECT to_regclass('%s')", tableName);
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
-            resultSet.next();
-            return resultSet.getString(1) != null;
+            return resultSet.next();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            return false;
         }
-        return false;
     }
 
     public void close() {
