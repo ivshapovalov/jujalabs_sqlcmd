@@ -53,7 +53,7 @@ public class DatabaseManagerTest {
         createTwoTablesInDatabase(dbName);
         databaseManager.connect(dbName, USER, PASSWORD);
         assertArrayEquals(new String[]{"first_table", "second_table"}, databaseManager.getTableNames());
-        databaseManager.closeConnection();
+        databaseManager.close();
         dropEnvironment();
     }
 
@@ -62,7 +62,7 @@ public class DatabaseManagerTest {
         preparationEnvironment();
         databaseManager.connect(dbName, USER, PASSWORD);
         assertArrayEquals(new String[]{}, databaseManager.getTableNames());
-        databaseManager.closeConnection();
+        databaseManager.close();
         dropEnvironment();
     }
 
