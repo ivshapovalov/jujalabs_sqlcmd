@@ -2,6 +2,8 @@ package juja.sqlcmd;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DatabaseManager {
@@ -22,4 +24,82 @@ public class DatabaseManager {
             return false;
         }
     }
+
+    public String[] tableNames() throws SQLException {
+        String sqlQuery = "SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery,
+                ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_UPDATABLE);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            int arraySize = numberOfTables(resultSet);
+            int index = 0;
+            String[] tableNames = new String[arraySize];
+            if (resultSet.isBeforeFirst()) {
+                while (resultSet.next()) {
+                    tableNames[index++] = resultSet.getString(1);
+                }
+                return tableNames;
+            } else {
+                return new String[0];
+            }
+        }
+    }
+
+    public boolean close() {
+        try {
+            connection.close();
+            return true;
+        } catch (SQLException | NullPointerException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    private int numberOfTables(ResultSet resultSet) throws SQLException {
+        int tableCounter = 0;
+        if (resultSet.last()) {
+            tableCounter = resultSet.getRow();
+            resultSet.beforeFirst();
+        }
+        return tableCounter;
+    }
+  public String[] tableNames() throws SQLException {
+        String sqlQuery = "SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery,
+                ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_UPDATABLE);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            int arraySize = numberOfTables(resultSet);
+            int index = 0;
+            String[] tableNames = new String[arraySize];
+            if (resultSet.isBeforeFirst()) {
+                while (resultSet.next()) {
+                    tableNames[index++] = resultSet.getString(1);
+                }
+                return tableNames;
+            } else {
+                return new String[0];
+            }
+        }
+    }
+
+    public boolean close() {
+        try {
+            connection.close();
+            return true;
+        } catch (SQLException | NullPointerException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    private int numberOfTables(ResultSet resultSet) throws SQLException {
+        int tableCounter = 0;
+        if (resultSet.last()) {
+            tableCounter = resultSet.getRow();
+            resultSet.beforeFirst();
+        }
+        return tableCounter;
 }
