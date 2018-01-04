@@ -49,6 +49,31 @@ public class DatabaseManager {
         }
     }
 
+    public boolean insert(String tableName, DataSet dataset) {
+        String csvValues = csvValues(dataset);
+        String sqlQuery = String.format("INSERT INTO %s VALUES(%s)", tableName, csvValues);
+        try(Statement statement = connection.createStatement()){
+            statement.executeUpdate(sqlQuery);
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    private String csvValues(DataSet dataset) {
+        String[] values = dataset.values();
+        StringBuilder csvValues = new StringBuilder();
+        for (String value : values) {
+            csvValues.append("'")
+                    .append(value)
+                    .append("'")
+                    .append(", ");
+        }
+        int lastComaIndex = csvValues.lastIndexOf(", ");
+        csvValues.replace(lastComaIndex, csvValues.length(), "");
+        return csvValues.toString();
+    }
+
     public void close() throws SQLException {
         if (connection != null) connection.close();
     }
