@@ -50,8 +50,8 @@ public class DatabaseManager {
     }
 
     public boolean insert(String tableName, DataSet dataset) {
-        String csvValues = csvValues(dataset);
-        String sqlQuery = String.format("INSERT INTO %s VALUES(%s)", tableName, csvValues);
+        String insertQueryValues = dataSetCsv(dataset);
+        String sqlQuery = String.format("INSERT INTO %s VALUES(%s)", tableName, insertQueryValues);
         try(Statement statement = connection.createStatement()){
             statement.executeUpdate(sqlQuery);
             return true;
@@ -60,18 +60,18 @@ public class DatabaseManager {
         }
     }
 
-    private String csvValues(DataSet dataset) {
+    private String dataSetCsv(DataSet dataset) {
         String[] values = dataset.values();
-        StringBuilder csvValues = new StringBuilder();
+        StringBuilder csvBuilder = new StringBuilder();
         for (String value : values) {
-            csvValues.append("'")
+            csvBuilder.append("'")
                     .append(value)
                     .append("'")
                     .append(", ");
         }
-        int lastComaIndex = csvValues.lastIndexOf(", ");
-        csvValues.replace(lastComaIndex, csvValues.length(), "");
-        return csvValues.toString();
+        int lastCommaIndex = csvBuilder.lastIndexOf(", ");
+        csvBuilder.replace(lastCommaIndex, csvBuilder.length(), "");
+        return csvBuilder.toString();
     }
 
     public void close() throws SQLException {
