@@ -67,11 +67,10 @@ public class DatabaseManager {
             csvBuilder.append("'")
                     .append(value)
                     .append("'")
-                    .append(", ");
+                    .append(",");
         }
-        int lastCommaIndex = csvBuilder.lastIndexOf(", ");
-        csvBuilder.replace(lastCommaIndex, csvBuilder.length(), "");
-        return csvBuilder.toString();
+        int lastCommaIndex = csvBuilder.lastIndexOf(",");
+        return csvBuilder.substring(0,lastCommaIndex);
     }
 
     public void close() throws SQLException {
