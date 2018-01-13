@@ -23,6 +23,11 @@ public class DataSet {
         tableRow[columnIndex] = value;
     }
 
+    public String[] values(){
+        return tableRow.clone();
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

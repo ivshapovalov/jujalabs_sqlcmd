@@ -23,6 +23,7 @@ public class DatabaseManagerTest {
     private static final String DB_USER = "sqlcmd";
     private static final String DB_USER_PASSWORD = "sqlcmd";
     private static final String TEST_DB_NAME = "testdatabase";
+    private static final String TEST_TABLE_NAME = "test_table";
 
     private static Connection connection;
 
@@ -95,9 +96,9 @@ public class DatabaseManagerTest {
     @Test
     public void getTableDataWhenEmptyTableReturnsEmptyArray() throws SQLException {
         databaseManager.connect(TEST_DB_NAME, DB_USER, DB_USER_PASSWORD);
-        executeSqlQuery("CREATE TABLE test_table()");
+        createTestTableWithIdAndName(TEST_TABLE_NAME);
         DataSet[] expected = new DataSet[]{};
-        assertArrayEquals(expected, databaseManager.getTableData("test_table"));
+        assertArrayEquals(expected, databaseManager.getTableData(TEST_TABLE_NAME));
     }
 
     @Test
@@ -110,12 +111,9 @@ public class DatabaseManagerTest {
     @Test
     public void getTableDataWhenValidDataReturnsTableDataArray() throws SQLException {
         databaseManager.connect(TEST_DB_NAME, DB_USER, DB_USER_PASSWORD);
-        executeSqlQuery("CREATE TABLE test_table(" +
-                "id INTEGER," +
-                "name VARCHAR(128)" +
-                ")");
-        executeSqlQuery("INSERT INTO test_table VALUES(1,'name1')");
-        executeSqlQuery("INSERT INTO test_table VALUES(2,'name2')");
+        createTestTableWithIdAndName(TEST_TABLE_NAME);
+        executeSqlQuery("INSERT INTO " + TEST_TABLE_NAME + " VALUES(1,'name1')");
+        executeSqlQuery("INSERT INTO " + TEST_TABLE_NAME + " VALUES(2,'name2')");
         DataSet row1 = new DataSet(2);
         row1.insertValue(0, "1");
         row1.insertValue(1, "name1");
@@ -123,8 +121,46 @@ public class DatabaseManagerTest {
         row2.insertValue(0, "2");
         row2.insertValue(1, "name2");
         DataSet[] expected = new DataSet[]{row1, row2};
-        DataSet[] actual = databaseManager.getTableData("test_table");
+        DataSet[] actual = databaseManager.getTableData(TEST_TABLE_NAME);
         assertThat(actual, arrayContainingInAnyOrder(expected));
+    }
+
+    @Test
+    public void insertWhenValidDataReturnsTrue() throws SQLException {
+        databaseManager.connect(TEST_DB_NAME, DB_USER, DB_USER_PASSWORD);
+        DataSet tableRow = new DataSet(2);
+        tableRow.insertValue(0, "1");
+        tableRow.insertValue(1, "name1");
+        createTestTableWithIdAndName(TEST_TABLE_NAME);
+        assertTrue(databaseManager.insert(TEST_TABLE_NAME, tableRow));
+    }
+
+    @Test
+    public void insertWhenInvalidTableNameReturnsFalse() throws SQLException {
+        databaseManager.connect(TEST_DB_NAME, DB_USER, DB_USER_PASSWORD);
+        DataSet tableRow = new DataSet(2);
+        tableRow.insertValue(0, "1");
+        tableRow.insertValue(1, "name1");
+        assertFalse(databaseManager.insert("not_existed_table", tableRow));
+    }
+
+    @Test
+    public void insertWhenInvalidNumberOfParametersReturnsFalse() throws SQLException {
+        databaseManager.connect(TEST_DB_NAME, DB_USER, DB_USER_PASSWORD);
+        DataSet tableRow = new DataSet(3);
+        tableRow.insertValue(0, "1");
+        tableRow.insertValue(1, "name1");
+        tableRow.insertValue(2, "name1");
+        createTestTableWithIdAndName(TEST_TABLE_NAME);
+        assertFalse(databaseManager.insert(TEST_TABLE_NAME, tableRow));
+    }
+
+    private void createTestTableWithIdAndName(String tableName) throws SQLException {
+        String sqlQuery = String.format("CREATE TABLE %s(" +
+                "id INTEGER," +
+                "name VARCHAR(128)" +
+                ")", tableName);
+        executeSqlQuery(sqlQuery);
     }
 
     private static void executeSqlQuery(String sqlQuery) throws SQLException {
