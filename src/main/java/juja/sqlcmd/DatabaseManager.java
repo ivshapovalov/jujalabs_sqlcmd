@@ -18,6 +18,10 @@ public class DatabaseManager {
             connection = DriverManager.getConnection(DB_CONNECTION_URL + database + "?loggerLevel=OFF", user, password);
             return true;
         } catch (ClassNotFoundException | SQLException e) {
+            System.out.println("1"+e.getMessage());
+            return false;
+        } catch (Exception e) {
+            System.out.println("2"+e.getMessage());
             return false;
         }
     }
