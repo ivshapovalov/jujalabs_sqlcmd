@@ -14,8 +14,8 @@ before_script:
     - psql -c "CREATE ROLE sqlcmd WITH PASSWORD 'sqlcmd' LOGIN SUPERUSER CREATEDB CREATEROLE VALID UNTIL 'infinity';" -U postgres
 #    - psql -c "GRANT ALL PRIVILEGES ON DATABASE sqlcmd TO sqlcmd;" -U postgres
 #    - psql -c "GRANT ALL PRIVILEGES ON DATABASE testdatabase TO sqlcmd;" -U postgres
-    - psql -c "GRANT CONNECT, TEMPORARY ON DATABASE sqlcmd TO public;" -U postgres
-    - psql -c "GRANT CONNECT, TEMPORARY ON DATABASE testdatabase TO public;" -U postgres
+#    - psql -c "GRANT CONNECT, TEMPORARY ON DATABASE sqlcmd TO public;" -U postgres
+#    - psql -c "GRANT CONNECT, TEMPORARY ON DATABASE testdatabase TO public;" -U postgres
 
 cache:
  directories:

@@ -74,7 +74,7 @@ public class DatabaseManagerTest {
 
     @Test
     public void connectWhenInvalidUserPasswordReturnsFalse() {
-        assertFalse(databaseManager.connect("sqlcmd", "sqlcmd", "Notsqlcmd"));
+        assertFalse(databaseManager.connect("sqlcmd", "sqlcmd", "wrong_password"));
     }
 
     @Test
