@@ -9,10 +9,9 @@ addons:
 services:
   - postgresql
 before_script:
-    - psql -c "CREATE USER sqlcmd WITH PASSWORD 'sqlcmd' CREATEDB CREATEROLE VALID UNTIL 'infinity';" -U
+    - psql -c "CREATE USER sqlcmd WITH PASSWORD 'sqlcmd' CREATEDB CREATEROLE VALID UNTIL 'infinity';" -U postgres
     - psql -c "CREATE DATABASE sqlcmd OWNER sqlcmd ENCODING = 'UTF8' CONNECTION LIMIT = -1;" -U postgres
     - psql -c "CREATE DATABASE testdatabase OWNER sqlcmd ENCODING = 'UTF8' CONNECTION LIMIT = -1;" -U postgres
-     postgres
     - psql -c "GRANT ALL ON DATABASE sqlcmd TO sqlcmd;" -U postgres
     - psql -c "GRANT ALL ON DATABASE testdatabase TO sqlcmd;" -U postgres
 #    - psql -c "GRANT CONNECT, TEMPORARY ON DATABASE sqlcmd TO public;" -U postgres
