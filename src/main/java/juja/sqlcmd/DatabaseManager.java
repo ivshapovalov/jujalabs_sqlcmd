@@ -21,7 +21,7 @@ public class DatabaseManager {
 //            System.out.println("1"+e.getMessage());
 //            return false;
         } catch (Exception e) {
-            System.out.println("2"+e.getMessage());
+            System.out.println(e.getMessage());
             return false;
         }
     }
