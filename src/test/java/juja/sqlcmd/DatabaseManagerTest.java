@@ -33,7 +33,7 @@ public class DatabaseManagerTest {
     public static void setConnection() throws SQLException {
         connection = DriverManager.getConnection(DB_CONNECTION_URL + DB_NAME, DB_USER, DB_USER_PASSWORD);
         executeSqlQuery("DROP DATABASE IF EXISTS " + TEST_DB_NAME);
-        executeSqlQuery("CREATE DATABASE " + TEST_DB_NAME);
+        executeSqlQuery("CREATE DATABASE " + TEST_DB_NAME +" OWNER "+DB_USER);
         connection.close();
         connection = DriverManager.getConnection(DB_CONNECTION_URL + TEST_DB_NAME, DB_USER, DB_USER_PASSWORD);
     }
