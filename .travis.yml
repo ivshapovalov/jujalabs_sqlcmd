@@ -15,6 +15,12 @@ before_script:
     - psql -c "GRANT CONNECT, TEMPORARY ON DATABASE sqlcmd TO public;" -U postgres
     - psql -c "GRANT CONNECT, TEMPORARY ON DATABASE testdatabase TO public;" -U postgres
 
+cache:
+ directories:
+   - $HOME/.m2
+   - $HOME/.gradle/caches/
+   - $HOME/.gradle/wrapper/
+
 #test:
 #  adapter: postgresql
 #  database: sqlcmd
