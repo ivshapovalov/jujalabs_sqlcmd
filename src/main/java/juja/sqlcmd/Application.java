@@ -10,7 +10,7 @@ public class Application {
     private static final String DB_DRIVER = "org.postgresql.Driver";
     private static final String DB_CONNECTION_URL = "jdbc:postgresql://localhost:5432/sqlcmd";
     private static final String DB_USER = "sqlcmd";
-    private static final String DB_PASSWORD = "123456";
+    private static final String DB_PASSWORD = "sqlcmd";
 
     private Connection connection;
 
