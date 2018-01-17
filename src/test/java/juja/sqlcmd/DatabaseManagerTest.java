@@ -48,6 +48,7 @@ public class DatabaseManagerTest {
 
     @Before
     public void init() throws SQLException {
+        dropAllTables();
         databaseManager = new DatabaseManager();
     }
 
@@ -86,8 +87,8 @@ public class DatabaseManagerTest {
     @Test
     public void getTableNamesWhenTwoTablesInDbReturnsTableNamesArray() throws SQLException {
         databaseManager.connect(TEST_DB_NAME, DB_USER, DB_USER_PASSWORD);
-        executeSqlQuery("CREATE TABLE table1()");
-        executeSqlQuery("CREATE TABLE table2()");
+        executeSqlQuery("CREATE TABLE public.table1()");
+        executeSqlQuery("CREATE TABLE public.table2()");
         String[] expected = new String[]{"table1", "table2"};
         assertArrayEquals(expected, databaseManager.getTableNames());
     }
@@ -111,8 +112,8 @@ public class DatabaseManagerTest {
     public void getTableDataWhenValidDataReturnsTableDataArray() throws SQLException {
         databaseManager.connect(TEST_DB_NAME, DB_USER, DB_USER_PASSWORD);
         createTestTableWithIdAndName(TEST_TABLE_NAME);
-        executeSqlQuery("INSERT INTO " + TEST_TABLE_NAME + " VALUES(1,'name1')");
-        executeSqlQuery("INSERT INTO " + TEST_TABLE_NAME + " VALUES(2,'name2')");
+        executeSqlQuery("INSERT INTO public." + TEST_TABLE_NAME + " VALUES(1,'name1')");
+        executeSqlQuery("INSERT INTO public." + TEST_TABLE_NAME + " VALUES(2,'name2')");
         DataSet row1 = new DataSet(2);
         row1.insertValue(0, "1");
         row1.insertValue(1, "name1");
@@ -155,7 +156,7 @@ public class DatabaseManagerTest {
     }
 
     private void createTestTableWithIdAndName(String tableName) throws SQLException {
-        String sqlQuery = String.format("CREATE TABLE %s(" +
+        String sqlQuery = String.format("CREATE TABLE public.%s(" +
                 "id INTEGER," +
                 "name VARCHAR(128)" +
                 ")", tableName);
