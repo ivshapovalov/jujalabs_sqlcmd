@@ -10,7 +10,7 @@ services:
   - postgresql
 before_script:
 #    - sudo vim /etc/postgresql/9.5/main/pg_hba.conf
-    - psql -U postgres -c 'CREATE USER sqlcmd PASSWORD "sqlcmd" CREATEDB CREATEROLE;'
+    - psql -U postgres -c "CREATE USER sqlcmd PASSWORD 'sqlcmd' CREATEDB CREATEROLE;"
     - psql -U postgres -c "CREATE DATABASE sqlcmd OWNER sqlcmd ENCODING = 'UTF8' CONNECTION LIMIT = -1;"
     - psql -U postgres -c "CREATE DATABASE testdatabase OWNER sqlcmd ENCODING = 'UTF8' CONNECTION LIMIT = -1;"
 #    - psql -U postgres -c "GRANT ALL ON DATABASE sqlcmd TO sqlcmd;"
