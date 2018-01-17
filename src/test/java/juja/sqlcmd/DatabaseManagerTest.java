@@ -170,6 +170,7 @@ public class DatabaseManagerTest {
     }
 
     private static void dropAllTables() throws SQLException {
+        executeSqlQuery("GRANT ALL ON SCHEMA public TO "+DB_USER);
         executeSqlQuery("DROP SCHEMA public CASCADE");
         executeSqlQuery("CREATE SCHEMA public AUTHORIZATION "+DB_USER);
         executeSqlQuery("GRANT ALL ON SCHEMA public TO postgres");
