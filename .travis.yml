@@ -14,10 +14,18 @@ before_script:
     - psql -c "CREATE DATABASE testdatabase OWNER sqlcmd ENCODING = 'UTF8' CONNECTION LIMIT = -1;" -U postgres
     - psql -c "GRANT ALL ON DATABASE sqlcmd TO sqlcmd;" -U postgres
     - psql -c "GRANT ALL ON DATABASE testdatabase TO sqlcmd;" -U postgres
+    - psql -c "DROP SCHEMA IF EXISTS 'public' CASCADE;" sqlcmd -U postgres
     - psql -c "DROP SCHEMA IF EXISTS public CASCADE;" sqlcmd -U postgres
+    - psql -c 'DROP SCHEMA IF EXISTS "public" CASCADE;' sqlcmd -U postgres
+    - psql -c "CREATE SCHEMA IF NOT EXISTS 'public' AUTHORIZATION sqlcmd;" -d sqlcmd -U postgres
+    - psql -c "CREATE SCHEMA IF NOT EXISTS public AUTHORIZATION sqlcmd;" -d sqlcmd -U postgres
     - psql -c 'CREATE SCHEMA IF NOT EXISTS "public" AUTHORIZATION sqlcmd;' -d sqlcmd -U postgres
 #    - psql -c "ALTER SCHEMA public OWNER TO sqlcmd;" -d sqlcmd -U postgres
+    - psql -c "DROP SCHEMA IF EXISTS 'public' CASCADE;" -d testdatabase -U postgres
     - psql -c "DROP SCHEMA IF EXISTS public CASCADE;" -d testdatabase -U postgres
+    - psql -c 'DROP SCHEMA IF EXISTS "public" CASCADE;' -d testdatabase -U postgres
+    - psql -c "CREATE SCHEMA IF NOT EXISTS 'public' AUTHORIZATION sqlcmd;" -d testdatabase -U postgres
+    - psql -c "CREATE SCHEMA IF NOT EXISTS public AUTHORIZATION sqlcmd;" -d testdatabase -U postgres
     - psql -c 'CREATE SCHEMA IF NOT EXISTS "public" AUTHORIZATION sqlcmd;' -d testdatabase -U postgres
 #    - psql -c "ALTER SCHEMA public OWNER TO sqlcmd;" -d testdatabase -U postgres
 #    - psql -c "GRANT CONNECT, TEMPORARY ON DATABASE sqlcmd TO public;" -U postgres
