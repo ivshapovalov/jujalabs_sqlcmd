@@ -19,7 +19,7 @@ public class ApplicationTest {
     private static final String DB_CONNECTION_URL = "jdbc:postgresql://127.0.0.1:5432/";
     private static final String DB_NAME = "sqlcmd";
     private static final String DB_USER = "sqlcmd";
-    private static final String DB_USER_PASSWORD = "sqlcmd";
+    private static final String DB_USER_PASSWORD = "123456";
     private static final String TEST_DB_NAME = "testdatabase";
 
 
