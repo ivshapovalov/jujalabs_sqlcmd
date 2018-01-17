@@ -23,8 +23,10 @@ before_script:
     - psql -U postgres -c "ALTER SCHEMA public OWNER TO sqlcmd;" -d testdatabase
 #    - psql -c "GRANT CONNECT, TEMPORARY ON DATABASE sqlcmd TO public;" -U postgres
 #    - psql -c "GRANT CONNECT, TEMPORARY ON DATABASE testdatabase TO public;" -U postgres
+    - psql -U sqlcmd -c "CREATE TABLE table1 (title varchar(40) NOT NULL);" -d sqlcmd
     - psql -U postgres -c "select * from pg_namespace;"
     - psql -U postgres -c "SELECT datname FROM pg_database WHERE datistemplate = false;"
+    - psql -U sqlcmd -c "select * from pg_stat_user_tables;" -d sqlcmd
 
 cache:
  directories:
