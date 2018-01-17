@@ -17,7 +17,7 @@ public class DatabaseManager {
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(DB_CONNECTION_URL + database + "?loggerLevel=OFF", user, password);
             return true;
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (Exception e) {
             return false;
         }
     }
