@@ -74,7 +74,7 @@ public class DatabaseManagerTest {
 
     @Test
     public void connectWhenInvalidUserPasswordReturnsFalse() {
-        assertTrue(databaseManager.connect("sqlcmd", "sqlcmd", "wrong_password"));
+        assertFalse(databaseManager.connect("sqlcmd", "sqlcmd", "wrong_password"));
     }
 
     @Test
@@ -171,6 +171,6 @@ public class DatabaseManagerTest {
 
     private static void dropAllTables() throws SQLException {
         executeSqlQuery("DROP SCHEMA public CASCADE");
-        executeSqlQuery("CREATE SCHEMA public");
+        executeSqlQuery("CREATE SCHEMA public AUTHORIZATION "+DB_USER);
     }
 }
