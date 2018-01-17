@@ -34,7 +34,6 @@ public class DatabaseManagerTest {
         connection = DriverManager.getConnection(DB_CONNECTION_URL + DB_NAME, DB_USER, DB_USER_PASSWORD);
         executeSqlQuery("DROP DATABASE IF EXISTS " + TEST_DB_NAME);
         executeSqlQuery("CREATE DATABASE " + TEST_DB_NAME +" OWNER "+DB_USER);
-//        executeSqlQuery("ALTER SCHEMA public OWNER TO " +DB_USER);
         connection.close();
         connection = DriverManager.getConnection(DB_CONNECTION_URL + TEST_DB_NAME, DB_USER, DB_USER_PASSWORD);
     }
@@ -49,7 +48,6 @@ public class DatabaseManagerTest {
 
     @Before
     public void init() throws SQLException {
-        dropAllTables();
         databaseManager = new DatabaseManager();
     }
 
@@ -92,6 +90,7 @@ public class DatabaseManagerTest {
         executeSqlQuery("CREATE TABLE public.table2()");
         String[] expected = new String[]{"table1", "table2"};
         assertArrayEquals(expected, databaseManager.getTableNames());
+        dropTables("table1","table2");
     }
 
     @Test
@@ -100,6 +99,8 @@ public class DatabaseManagerTest {
         createTestTableWithIdAndName(TEST_TABLE_NAME);
         DataSet[] expected = new DataSet[]{};
         assertArrayEquals(expected, databaseManager.getTableData(TEST_TABLE_NAME));
+        dropTables(TEST_TABLE_NAME);
+
     }
 
     @Test
@@ -124,6 +125,8 @@ public class DatabaseManagerTest {
         DataSet[] expected = new DataSet[]{row1, row2};
         DataSet[] actual = databaseManager.getTableData(TEST_TABLE_NAME);
         assertThat(actual, arrayContainingInAnyOrder(expected));
+        dropTables(TEST_TABLE_NAME);
+
     }
 
     @Test
@@ -134,6 +137,8 @@ public class DatabaseManagerTest {
         tableRow.insertValue(1, "name1");
         createTestTableWithIdAndName(TEST_TABLE_NAME);
         assertTrue(databaseManager.insert(TEST_TABLE_NAME, tableRow));
+        dropTables(TEST_TABLE_NAME);
+
     }
 
     @Test
@@ -154,6 +159,8 @@ public class DatabaseManagerTest {
         tableRow.insertValue(2, "name1");
         createTestTableWithIdAndName(TEST_TABLE_NAME);
         assertFalse(databaseManager.insert(TEST_TABLE_NAME, tableRow));
+        dropTables(TEST_TABLE_NAME);
+
     }
 
     private void createTestTableWithIdAndName(String tableName) throws SQLException {
@@ -170,10 +177,9 @@ public class DatabaseManagerTest {
         }
     }
 
-    private static void dropAllTables() throws SQLException {
-        executeSqlQuery("DROP SCHEMA public CASCADE");
-        executeSqlQuery("CREATE SCHEMA public AUTHORIZATION "+DB_USER);
-        executeSqlQuery("GRANT ALL ON SCHEMA public TO postgres");
-        executeSqlQuery("GRANT ALL ON SCHEMA public TO "+DB_USER);
+    private static void dropTables(String ...tableNames) throws SQLException {
+        for (String tableName:tableNames) {
+            executeSqlQuery("DROP TABLE IF EXISTS public."+tableName);
+        }
     }
 }
