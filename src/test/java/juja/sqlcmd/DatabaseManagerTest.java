@@ -72,10 +72,10 @@ public class DatabaseManagerTest {
         assertFalse(databaseManager.connect("sqlcmd", "Notsqlcmd", "sqlcmd"));
     }
 
-    @Test
-    public void connectWhenInvalidUserPasswordReturnsFalse() {
-        assertFalse(databaseManager.connect("sqlcmd", "sqlcmd", "Notsqlcmd"));
-    }
+//    @Test
+//    public void connectWhenInvalidUserPasswordReturnsFalse() {
+//        assertFalse(databaseManager.connect("sqlcmd", "sqlcmd", "Notsqlcmd"));
+//    }
 
     @Test
     public void getTableNamesWhenNoTablesInDbReturnsEmptyArray() throws SQLException {
