@@ -9,7 +9,8 @@ before_script:
     - psql -c "CREATE ROLE sqlcmd WITH PASSWORD 'sqlcmd' LOGIN
                  SUPERUSER CREATEDB CREATEROLE
                   VALID UNTIL 'infinity';" -U postgres
-    - psql -c "GRANT SELECT, UPDATE, INSERT ON ALL TABLES IN SCHEMA public TO sqlcmd;" -U postgres
+    - psql -c "GRANT ALL ON DATABASE sqlcmd TO sqlcmd;" -U postgres
+    - psql -c "GRANT ALL ON DATABASE testdatabase TO sqlcmd;" -U postgres
 
 test:
   adapter: postgresql
