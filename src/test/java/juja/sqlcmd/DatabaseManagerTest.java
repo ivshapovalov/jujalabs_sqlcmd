@@ -48,7 +48,6 @@ public class DatabaseManagerTest {
 
     @Before
     public void init() throws SQLException {
-        dropAllTables();
         databaseManager = new DatabaseManager();
     }
 
