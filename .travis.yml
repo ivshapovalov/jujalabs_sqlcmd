@@ -13,16 +13,16 @@ before_script:
     - psql -U postgres -c "CREATE USER sqlcmd WITH PASSWORD 'sqlcmd' CREATEDB CREATEROLE;"
     - psql -U postgres -c "CREATE DATABASE sqlcmd OWNER sqlcmd ENCODING = 'UTF8' CONNECTION LIMIT = -1;"
     - psql -U postgres -c "CREATE DATABASE testdatabase OWNER sqlcmd ENCODING = 'UTF8' CONNECTION LIMIT = -1;"
-    - psql -U postgres -c "GRANT ALL ON DATABASE sqlcmd TO sqlcmd;"
-    - psql -U postgres -c "GRANT ALL ON DATABASE testdatabase TO sqlcmd;"
+#    - psql -U postgres -c "GRANT ALL ON DATABASE sqlcmd TO sqlcmd;"
+#    - psql -U postgres -c "GRANT ALL ON DATABASE testdatabase TO sqlcmd;"
 #    - psql -c "DROP SCHEMA IF EXISTS public CASCADE;" sqlcmd -U postgres
 #    - psql -c "CREATE SCHEMA public AUTHORIZATION sqlcmd;" -d sqlcmd -U postgres
-    - psql -U postgres -c "ALTER SCHEMA public OWNER TO sqlcmd;" -d sqlcmd
-    - psql -U postgres -c "GRANT ALL ON SCHEMA public TO sqlcmd;" -d sqlcmd
+#    - psql -U postgres -c "ALTER SCHEMA public OWNER TO sqlcmd;" -d sqlcmd
+#    - psql -U postgres -c "GRANT ALL ON SCHEMA public TO sqlcmd;" -d sqlcmd
 #    - psql -c "DROP SCHEMA IF EXISTS public CASCADE;" -d testdatabase -U postgres
 #    - psql -c "CREATE SCHEMA public AUTHORIZATION sqlcmd;" -d testdatabase -U postgres
-    - psql -U postgres -c "ALTER SCHEMA public OWNER TO sqlcmd;" -d testdatabase
-    - psql -U postgres -c "GRANT ALL ON SCHEMA public TO sqlcmd;" -d testdatabase
+#    - psql -U postgres -c "ALTER SCHEMA public OWNER TO sqlcmd;" -d testdatabase
+#    - psql -U postgres -c "GRANT ALL ON SCHEMA public TO sqlcmd;" -d testdatabase
 #    - psql -c "GRANT CONNECT, TEMPORARY ON DATABASE sqlcmd TO public;" -U postgres
 #    - psql -c "GRANT CONNECT, TEMPORARY ON DATABASE testdatabase TO public;" -U postgres
 #    - psql -U sqlcmd -c "CREATE TABLE table1 (title varchar(40) NOT NULL);" -d sqlcmd
