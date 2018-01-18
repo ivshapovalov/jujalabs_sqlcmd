@@ -11,7 +11,7 @@ addons:
 services:
   - postgresql
 before_script:
-    - sudo mv -f "$TRAVIS_BUILD_DIR/target/test-classes/config/pg_hba.conf" "/etc/postgresql/{{postgres.version}}/main/"
+    - sudo mv -f $TRAVIS_BUILD_DIR/target/test-classes/config/pg_hba.conf /etc/postgresql/${{postgres.version}}/main/
     - sudo service postgresql restart
 #    - sudo cat /etc/postgresql/9.6/main/pg_hba.conf
     - psql -U postgres -c "CREATE USER sqlcmd PASSWORD 'sqlcmd' CREATEDB;"
