@@ -17,11 +17,11 @@ before_script:
 #      } >pg_hba.conf
 #    - sudo echo $' trust/local   all             sqlcmd                                     md5\n trust/local   all
 #               sqlcmd_test                                     md5\n' >pg_hba.conf
-#    - sudo mv -f $TRAVIS_BUILD_DIR/target/classes/resources/config/pg_hba.conf /etc/postgresql/9.6/main/
-    - sudo ls -la $TRAVIS_BUILD_DIR/target/classes
-    - sudo ls -la $TRAVIS_BUILD_DIR/target/generated-sources
-    - sudo ls -la $TRAVIS_BUILD_DIR/src/main
-    - sudo ls -la $TRAVIS_BUILD_DIR/src/test
+    - sudo mv -f $TRAVIS_BUILD_DIR/src/test/resources/config/pg_hba.conf /etc/postgresql/9.6/main/
+#    - sudo ls -la $TRAVIS_BUILD_DIR/target/classes
+#    - sudo ls -la $TRAVIS_BUILD_DIR/target/generated-sources
+#    - sudo ls -la $TRAVIS_BUILD_DIR/src/main
+#    - sudo ls -la $TRAVIS_BUILD_DIR/src/test
 #    - sudo sed -i 's/local   all             all                                     trust/local   all             sqlcmd                                     md5/g' /etc/postgresql/9.6/main/pg_hba.conf
 #    - sudo sed -i 's/local   all             all                                     trust/local   all             sqlcmd_test                                     md5/g' /etc/postgresql/9.6/main/pg_hba.conf
 #    - sudo sed -i 's/host    all             all             127.0.0.1\/32            trust/host    all             sqlcmd             127.0.0.1\/32            md5/g' /etc/postgresql/9.6/main/pg_hba.conf
