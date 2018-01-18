@@ -10,9 +10,6 @@ services:
   - postgresql
 before_script:
 #    - sudo vim /etc/postgresql/9.5/main/pg_hba.conf
-    - psql -U postgres -c "CREATE USER sqlcmd PASSWORD 'sqlcmd' CREATEDB CREATEROLE;"
-    - psql -U postgres -c "CREATE DATABASE sqlcmd OWNER sqlcmd ENCODING = 'UTF8' CONNECTION LIMIT = -1;"
-    - psql -U postgres -c "CREATE DATABASE sqlcmd_test OWNER sqlcmd ENCODING = 'UTF8' CONNECTION LIMIT = -1;"
     - sudo sed -i 's/local   all             all                                     trust/local   all             sqlcmd                                     md5/g' /etc/postgresql/9.6/main/pg_hba.conf
     - sudo sed -i 's/local   all             all                                     trust/local   all             sqlcmd_test                                     md5/g' /etc/postgresql/9.6/main/pg_hba.conf
     - sudo sed -i 's/host    all             all             127.0.0.1\/32            trust/host    all             sqlcmd             127.0.0.1\/32            md5/g' /etc/postgresql/9.6/main/pg_hba.conf
@@ -22,6 +19,9 @@ before_script:
     - sudo service postgresql restart
     - sudo cat /etc/postgresql/9.6/main/pg_hba.conf
 
+    - psql -U postgres -c "CREATE USER sqlcmd PASSWORD 'sqlcmd' CREATEDB CREATEROLE;"
+    - psql -U postgres -c "CREATE DATABASE sqlcmd OWNER sqlcmd ENCODING = 'UTF8' CONNECTION LIMIT = -1;"
+    - psql -U postgres -c "CREATE DATABASE sqlcmd_test OWNER sqlcmd ENCODING = 'UTF8' CONNECTION LIMIT = -1;"
 #    - psql -U postgres -c "GRANT ALL ON DATABASE sqlcmd TO sqlcmd;"
 #    - psql -U postgres -c "GRANT ALL ON DATABASE testdatabase TO sqlcmd;"
 #    - psql -c "DROP SCHEMA IF EXISTS public CASCADE;" sqlcmd -U postgres
