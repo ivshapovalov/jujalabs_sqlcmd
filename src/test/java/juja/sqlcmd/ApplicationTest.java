@@ -20,7 +20,7 @@ public class ApplicationTest {
     private static final String DB_NAME = "sqlcmd";
     private static final String DB_USER = "sqlcmd";
     private static final String DB_USER_PASSWORD = "sqlcmd";
-    private static final String TEST_DB_NAME = "testdatabase";
+    private static final String TEST_DB_NAME = "sqlcmd_test";
 
 
     private static Connection connection;
