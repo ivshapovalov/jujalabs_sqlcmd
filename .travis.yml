@@ -9,29 +9,9 @@ addons:
 services:
   - postgresql
 before_script:
-#    - sudo vim /etc/postgresql/9.5/main/pg_hba.conf
-#     - sudo {
-#        echo 'trust/local   all         sqlcmd                                     md5'
-#        echo 'trust/local   all         sqlcmd_test                                     md5'
-#        echo 'trust/host    all             sqlcmd             127.0.0.1\/32            md5'
-#      } >pg_hba.conf
-#    - sudo echo $' trust/local   all             sqlcmd                                     md5\n trust/local   all
-#               sqlcmd_test                                     md5\n' >pg_hba.conf
-    - sudo ls -la $TRAVIS_BUILD_DIR/target/test-classes
     - sudo mv -f $TRAVIS_BUILD_DIR/target/test-classes/config/pg_hba.conf /etc/postgresql/9.6/main/
-#    - sudo ls -la $TRAVIS_BUILD_DIR/target/generated-sources
-#    - sudo ls -la $TRAVIS_BUILD_DIR/src/main
-#    - sudo ls -la $TRAVIS_BUILD_DIR/src/test
-#    - sudo sed -i 's/local   all             all                                     trust/local   all             sqlcmd                                     md5/g' /etc/postgresql/9.6/main/pg_hba.conf
-#    - sudo sed -i 's/local   all             all                                     trust/local   all             sqlcmd_test                                     md5/g' /etc/postgresql/9.6/main/pg_hba.conf
-#    - sudo sed -i 's/host    all             all             127.0.0.1\/32            trust/host    all             sqlcmd             127.0.0.1\/32            md5/g' /etc/postgresql/9.6/main/pg_hba.conf
-#    - sudo sed -i 's/host    all             all             127.0.0.1\/32            trust/host    all             sqlcmd_test             127.0.0.1\/32            md5/g' /etc/postgresql/9.6/main/pg_hba.conf
-#    - sudo sed -i 's/host    all             all             ::1\/128                 trust/host    all             sqlcmd             ::1\/128                 md5/g' /etc/postgresql/9.6/main/pg_hba.conf
-#    - sudo sed -i 's/host    all             all             ::1\/128                 trust/host    all             sqlcmd_test             ::1\/128                 md5/g' /etc/postgresql/9.6/main/pg_hba.conf
     - sudo service postgresql restart
 #    - sudo cat /etc/postgresql/9.6/main/pg_hba.conf
-
-#    - psql -U postgres -c "ALTER USER postgres WITH PASSWORD 'postgres';"
     - psql -U postgres -c "CREATE USER sqlcmd PASSWORD 'sqlcmd' CREATEDB CREATEROLE;"
     - psql -U postgres -c "CREATE DATABASE sqlcmd OWNER sqlcmd ENCODING = 'UTF8' CONNECTION LIMIT = -1;"
     - psql -U postgres -c "CREATE DATABASE sqlcmd_test OWNER sqlcmd ENCODING = 'UTF8' CONNECTION LIMIT = -1;"
