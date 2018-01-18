@@ -33,10 +33,10 @@ before_script:
 #    - psql -c "GRANT CONNECT, TEMPORARY ON DATABASE testdatabase TO public;" -U postgres
 #    - psql -U sqlcmd -c "CREATE TABLE table1 (title varchar(40) NOT NULL);" -d sqlcmd
 #    - psql -U sqlcmd -c "CREATE TABLE table1 (title varchar(40) NOT NULL);" -d testdatabase
-#    - psql -U postgres -c "select * from pg_namespace;"
-#    - psql -U postgres -c "SELECT datname FROM pg_database WHERE datistemplate = false;"
-#    - psql -U sqlcmd -c "select * from pg_stat_user_tables;" -d sqlcmd
-#    - psql -U sqlcmd -c "select * from pg_stat_user_tables;" -d testdatabase
+    - psql -U postgres -c "select * from pg_namespace;"
+    - psql -U postgres -c "SELECT datname FROM pg_database WHERE datistemplate = false;"
+    - psql -U sqlcmd -c "select * from pg_stat_user_tables;" -d sqlcmd
+    - psql -U sqlcmd -c "select * from pg_stat_user_tables;" -d sqlcmd_test
 #    - psql -U sqlcmd -c " DROP DATABASE testdatabase;" -d sqlcmd
 
 cache:
