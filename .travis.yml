@@ -12,7 +12,7 @@ before_script:
     - sudo mv -f $TRAVIS_BUILD_DIR/target/test-classes/config/pg_hba.conf /etc/postgresql/9.6/main/
     - sudo service postgresql restart
 #    - sudo cat /etc/postgresql/9.6/main/pg_hba.conf
-    - psql -U postgres -c "CREATE USER sqlcmd PASSWORD 'sqlcmd' CREATEDB CREATEROLE;"
+    - psql -U postgres -c "CREATE USER sqlcmd PASSWORD 'sqlcmd' CREATEDB;"
     - psql -U postgres -c "CREATE DATABASE sqlcmd OWNER sqlcmd ENCODING = 'UTF8' CONNECTION LIMIT = -1;"
 #    - psql -U postgres -c "CREATE DATABASE sqlcmd_test OWNER sqlcmd ENCODING = 'UTF8' CONNECTION LIMIT = -1;"
 
