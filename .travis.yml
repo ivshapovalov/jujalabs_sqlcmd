@@ -36,7 +36,6 @@ before_script:
     - psql -U postgres -c "CREATE DATABASE sqlcmd OWNER sqlcmd ENCODING = 'UTF8' CONNECTION LIMIT = -1;"
     - psql -U postgres -c "CREATE DATABASE sqlcmd_test OWNER sqlcmd ENCODING = 'UTF8' CONNECTION LIMIT = -1;"
 
-    - sudo cat /etc/postgresql/9.6/main/pg_hba.conf
 #    - psql -U postgres -c "GRANT ALL ON DATABASE sqlcmd TO sqlcmd;"
 #    - psql -U postgres -c "GRANT ALL ON DATABASE testdatabase TO sqlcmd;"
 #    - psql -c "DROP SCHEMA IF EXISTS public CASCADE;" sqlcmd -U postgres
