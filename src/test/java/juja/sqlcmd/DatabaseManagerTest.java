@@ -35,7 +35,7 @@ public class DatabaseManagerTest {
         executeSqlQuery("DROP DATABASE IF EXISTS " + TEST_DB_NAME);
         executeSqlQuery("CREATE DATABASE " + TEST_DB_NAME);
         connection.close();
-        connection = DriverManager.getConnection(DB_CONNECTION_URL + TEST_DB_NAME, "postgres", DB_USER_PASSWORD);
+        connection = DriverManager.getConnection(DB_CONNECTION_URL + TEST_DB_NAME, "postgres", "postgres");
         executeSqlQuery("ALTER SCHEMA public OWNER TO " + DB_USER);
         connection.close();
         connection = DriverManager.getConnection(DB_CONNECTION_URL + TEST_DB_NAME, DB_USER, DB_USER_PASSWORD);
