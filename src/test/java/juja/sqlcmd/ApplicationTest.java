@@ -20,6 +20,8 @@ public class ApplicationTest {
     private static final String DB_NAME = "sqlcmd";
     private static final String DB_USER = "sqlcmd";
     private static final String DB_USER_PASSWORD = "sqlcmd";
+    private static final String ADMIN_USER = "postgres";
+    private static final String ADMIN_PASSWORD = "postgres";
     private static final String TEST_DB_NAME = "sqlcmd_test";
 
 
@@ -33,11 +35,11 @@ public class ApplicationTest {
 
     @BeforeClass
     public static void setConnection() throws SQLException {
-        connection = DriverManager.getConnection(DB_CONNECTION_URL + DB_NAME, DB_USER, DB_USER_PASSWORD);
+        connection = DriverManager.getConnection(DB_CONNECTION_URL + DB_NAME, ADMIN_USER, ADMIN_PASSWORD);
         executeSqlQuery("DROP DATABASE IF EXISTS " + TEST_DB_NAME);
         executeSqlQuery("CREATE DATABASE " + TEST_DB_NAME);
         connection.close();
-        connection = DriverManager.getConnection(DB_CONNECTION_URL + TEST_DB_NAME, DB_USER, DB_USER_PASSWORD);
+        connection = DriverManager.getConnection(DB_CONNECTION_URL + TEST_DB_NAME, ADMIN_USER, ADMIN_PASSWORD);
         executeSqlQuery("DROP DATABASE IF EXISTS " + DB_NAME);
         executeSqlQuery("CREATE DATABASE " + DB_NAME);
         connection.close();
