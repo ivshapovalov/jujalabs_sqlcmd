@@ -20,8 +20,7 @@ public class Application {
 
     public void simpleSQL() throws SQLException, ClassNotFoundException {
         Class.forName(DB_DRIVER);
-        connection = DriverManager
-                .getConnection(DB_CONNECTION_URL, DB_USER, DB_PASSWORD);
+        connection = DriverManager.getConnection(DB_CONNECTION_URL, DB_USER, DB_PASSWORD);
         printTableNames();
         String sqlQuery = "CREATE TABLE \"user\"(id SERIAL PRIMARY KEY, name TEXT, password TEXT)";
         executeSqlQuery(sqlQuery);
@@ -82,7 +81,7 @@ public class Application {
                 while (resultSet.next()) {
                     result.append(resultSet.getString(1)).append(System.lineSeparator());
                 }
-            }else{
+            } else {
                 result.append("db is empty");
             }
         }
